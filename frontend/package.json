@@ -13,6 +13,8 @@
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
+		"@skeletonlabs/skeleton": "^2.2.0",
+		"@skeletonlabs/tw-plugin": "^0.2.1",
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@types/cookie": "^0.5.1",
