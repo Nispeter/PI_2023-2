@@ -11,6 +11,8 @@ export default {
 		extend: {}
 	},
 	plugins: [
-		skeleton
+		skeleton({
+			themes: {preset: ['skeleton']}
+		})
 	]
 };
