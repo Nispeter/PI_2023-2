@@ -2,8 +2,7 @@
 	import { Table } from '@skeletonlabs/skeleton';
 	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
-	import { Avatar } from '@skeletonlabs/skeleton';
-	import { AppShell } from '@skeletonlabs/skeleton';
+	import { AppBar } from '@skeletonlabs/skeleton';
 
 	const sourceData = [
 		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '20:15', Fecha: '05/10/2023' },
@@ -25,34 +24,11 @@
 	};
 </script>
 
-<div class="absolute top-0 right-0">
-	<button type="button" class="btn btn-xl variant-filled">Administrar Datos</button>
-</div>
-<h1>
-	<strong> Bienvenidos a su aplicacion de reconocimiento de vehiculos </strong>
-</h1>
+<AppBar class="w-full">
+	<h1 class="h1" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
+	<h3 class="h3" data-toc-ignore>Bienvenidos a su aplicacion de reconocimiento de vehiculos</h3>
+</AppBar>
+
+<div class="static top-0 right-0"><button type="button" class="btn variant-filled">Administrar Base de Datos</button></div>
 
 <Table source={tableSimple} />
-
-<div class="table-container">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Nombre</th>
-				<th>Número Patente</th>
-				<th>Hora</th>
-				<th>Fecha</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each sourceData as row, i}
-				<tr>
-					<td>{row.nombreDueño}</td>
-					<td>{row.nPatente}</td>
-					<td>{row.Hora}</td>
-					<td>{row.Fecha}</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-</div>
