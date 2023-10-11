@@ -12,7 +12,12 @@ export default {
 	},
 	plugins: [
 		skeleton({
-			themes: {preset: ['skeleton']}
+			themes: {
+				preset: [
+					{ name: 'skeleton', enhancements: true },
+					{ name: 'hamlindigo', enhancements: true }
+				]
+			}
 		})
 	]
 };
