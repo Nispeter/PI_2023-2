@@ -25,10 +25,19 @@
 </script>
 
 <AppBar class="w-full">
-	<h1 class="h1" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
-	<h3 class="h3" data-toc-ignore>Bienvenidos a su aplicacion de reconocimiento de vehiculos</h3>
+	<h1 class="h1 font-sans" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
+	<h3 class="h3 font-sans" data-toc-ignore>
+		Bienvenidos a su aplicacion de reconocimiento de vehiculos
+	</h3>
 </AppBar>
 
-<div class="static top-0 right-0"><button type="button" class="btn variant-filled">Administrar Base de Datos</button></div>
-
-<Table source={tableSimple} />
+<div class="w-full p-10">
+	<div class="flex justify-end">
+		<div>
+			<button type="button" class="btn variant-filled">Administrar Base de Datos</button>
+		</div>
+	</div>
+</div>
+<div class="px-20 py-5">
+	<Table source={tableSimple} />
+</div>
