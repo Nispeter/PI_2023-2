@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@auth0/auth0-spa-js':
+    specifier: ^2.1.2
+    version: 2.1.2
   axios:
     specifier: ^1.5.1
     version: 1.5.1
@@ -96,6 +99,10 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.19
     dev: true
+
+  /@auth0/auth0-spa-js@2.1.2:
+    resolution: {integrity: sha512-xdA65Z/U7++Y7L9Uwh8Q8OVOs6qgFz+fb7GAzHFjpr1icO37B//xdzLXm7ZRgA19RWrsNe1nme3h896igJSvvw==}
+    dev: false
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
