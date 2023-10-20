@@ -5,10 +5,16 @@
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
+	import {get} from "svelte/store"
+	import { isAuthenticated } from '../../store';
+	import { goto } from '$app/navigation';
 
 
 	onMount(async ()=> {
 		await auth.createClient();
+		if(!get(isAuthenticated)){
+			goto("/login")
+		}
 	})
 
 	async function logout() {
