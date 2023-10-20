@@ -14,6 +14,9 @@ async function createClient() {
 			}
 		})
 	);
+
+	isAuthenticated.set(await get(authClient).isAuthenticated());
+	user.set(await get(authClient).getUser() ?? {});
 }
 
 async function loginWithPopup() {
