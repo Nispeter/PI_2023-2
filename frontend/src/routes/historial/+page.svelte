@@ -1,9 +1,19 @@
 <script lang="ts">
+	import { auth } from '$lib/auth';
 	import { Table } from '@skeletonlabs/skeleton';
 	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 
+
+	onMount(async ()=> {
+		await auth.createClient();
+	})
+
+	async function logout() {
+		await auth.logout();
+	}
 	const sourceData = [
 		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '20:15', Fecha: '05/10/2023' },
 		{ nombreDueño: 'Maria Espinoza', nPatente: 'MR LX 88', Hora: '20:07', Fecha: '05/10/2023' },
@@ -24,11 +34,15 @@
 	};
 </script>
 
-<AppBar class="w-full">
+<AppBar slotTrail="place-content-end">
 	<h1 class="h1 font-sans" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
 	<h3 class="h3 font-sans" data-toc-ignore>
 		Bienvenidos a su aplicacion de reconocimiento de vehiculos
 	</h3>
+
+	<svelte:fragment slot="trail">
+		<button type="button" class="btn variant-filled-primary" on:click={logout}>Logout</button>
+	</svelte:fragment>
 </AppBar>
 
 <div class="w-full p-10">
