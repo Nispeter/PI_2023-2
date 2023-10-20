@@ -1,5 +1,6 @@
 import { join } from 'path';
 import { skeleton } from '@skeletonlabs/tw-plugin';
+import { enhance } from '$app/forms';
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: 'class',

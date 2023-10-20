@@ -1,7 +1,30 @@
 <script lang="ts">
+  	import tableTest from './tableTest.svelte';
+
 	import type { PageData } from './$types';
+	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
+	import type { PaginationSettings, TableSource } from '@skeletonlabs/skeleton';
+	import { Paginator } from '@skeletonlabs/skeleton';
 
 	export let data: PageData;
+
+	let paginationSettings = {
+		page: 0,
+		limit: 5,
+		size: data.allpokemon.results.length,
+		amounts: [1,2,5,10],
+	} satisfies PaginationSettings;
+
+	$: paginatedSource = data.allpokemon.results.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+
+	// const tableSimple : TableSource = {
+	// 	head: ['ID', 'Name'],
+	// 	// body: tableMapperValues(paginatedSource, ['url', 'name']),
+	// }
+
 
     let is_selected = false;
 
@@ -15,41 +38,10 @@
 
 </script>
 
-<div class="bg-slate flex justify-center">
-	<table class="table-fixed">
-		<thead class="">
-			<tr class="border-bottom">
-                <th><input type="checkbox" class="rounded-lg w-5 h-5 accent-green-800"></th>
-				<th>Song</th>
-				<th>Artist</th>
-				<th>Year</th>
-			</tr>
-		</thead>
-		<tbody class="text-left">
-			<tr class="border-bottom" id="row1">
-                <td class="p-3"><input type="checkbox" class="rounded-lg w-5 h-5 accent-green-800"></td>
-				<td class="p-3 text-sm text-green">The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-                <td class="p-3 text-sm text-green">Malcolm Lockyer</td>
-				<td class="p-3 text-sm text-green">1961</td>
-			</tr>
-			<tr class="border-bottom">
-                <td class="p-3"><input type="checkbox" class="rounded-lg w-5 h-5 accent-green-800"></td>
-				<td class="p-3 text-sm text-green">Witchy Woman</td>
-				<td class="p-3 text-sm text-green">The Eagles</td>
-				<td class="p-3 text-sm text-green">1972</td>
-			</tr>
-			<tr class="border-bottom">
-                <td class="p-3"><input type="checkbox" class="rounded-lg w-5 h-5 accent-green-800"></td>
-				<td class="p-3 text-sm text-green">Shining Star</td>
-				<td class="p-3 text-sm text-green">Earth, Wind, and Fire</td>
-				<td class="p-3 text-sm text-green">1975</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+<!-- <Table source={tableSimple} interactive={true} /> -->
+<section>
+	<Table source={{head: ['URL', 'NAME'], body: tableMapperValues(paginatedSource, ['url','name'])}} interactive={true}/>
+	<!-- <Paginator bind:settings={paginationSettings} showFirstLastButtons={true} showPreviousNextButtons={true}/> -->
+	<Paginator bind:settings={paginationSettings} showNumerals="{true}" justify="justify-between" />
+</section>
 
-<style>
-	.border-bottom {
-        border-bottom: 1px solid gray;
-	}
-</style>
