@@ -5,17 +5,17 @@
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	import {get} from "svelte/store"
+	import { get } from 'svelte/store';
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
+	import logoutIcon from "$lib/images/logout.svg"
 
-
-	onMount(async ()=> {
+	onMount(async () => {
 		await auth.createClient();
-		if(!get(isAuthenticated)){
-			goto("/login")
+		if (!get(isAuthenticated)) {
+			goto('/login');
 		}
-	})
+	});
 
 	async function logout() {
 		await auth.logout();
@@ -38,23 +38,36 @@
 		body: tableMapperValues(sourceData, ['nombreDueño', 'nPatente', 'Hora', 'Fecha']),
 		meta: tableMapperValues(sourceData, ['nombreDueño', 'nPatente', 'Hora', 'Fecha'])
 	};
+
+	const goPatentes= () => {
+		goto("/patentes");
+	}
 </script>
+<svelte:head>
+	<title>
+		Historial
+	</title>
+</svelte:head>
 
 <AppBar slotTrail="place-content-end">
-	<h1 class="h1 font-sans" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
-	<h3 class="h3 font-sans" data-toc-ignore>
+	<h1 class="h1" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
+	<h3 class="h3" data-toc-ignore>
 		Bienvenidos a su aplicacion de reconocimiento de vehiculos
 	</h3>
 
 	<svelte:fragment slot="trail">
-		<button type="button" class="btn variant-filled-primary" on:click={logout}>Logout</button>
+		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
+			<picture>
+				<img src="{logoutIcon}" alt="salir" width="20" height="20">
+			</picture>
+		</button>
 	</svelte:fragment>
 </AppBar>
 
 <div class="w-full p-10">
 	<div class="flex justify-end">
 		<div>
-			<button type="button" class="btn variant-filled">Administrar Base de Datos</button>
+			<button type="button" class="btn variant-filled" on:click={goPatentes}>Administrar Base de Datos</button>
 		</div>
 	</div>
 </div>
