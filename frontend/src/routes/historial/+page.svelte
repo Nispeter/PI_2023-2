@@ -3,6 +3,7 @@
 	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
+	import { Paginator } from '@skeletonlabs/skeleton';
 
 	const sourceData = [
 		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '20:15', Fecha: '05/10/2023' },
@@ -14,14 +15,22 @@
 		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '08:15', Fecha: '05/10/2023' },
 		{ nombreDueño: 'Isabel Gonzales', nPatente: 'KV BM 77', Hora: '08:11', Fecha: '05/10/2023' },
 		{ nombreDueño: 'Paola Rojas', nPatente: 'KL FM 59', Hora: '22:50', Fecha: '04/10/2023' },
-		{ nombreDueño: 'Maria Ignacia Rosas', nPatente: 'HN MN 61', Hora: '20:30', Fecha: '04/10/2023' }
+		{ nombreDueño: 'Maria Ignacia Rosas', nPatente: 'HN MN 61', Hora: '20:30', Fecha: '04/10/2023' },
+		{ nombreDueño: 'Marco Aguirre', nPatente: 'MH GH 80', Hora: '20:12', Fecha: '04/10/2023' }
 	];
 
-	const tableSimple: TableSource = {
-		head: ['Nombre', 'Número Patente', 'Hora', 'Fecha'],
-		body: tableMapperValues(sourceData, ['nombreDueño', 'nPatente', 'Hora', 'Fecha']),
-		meta: tableMapperValues(sourceData, ['nombreDueño', 'nPatente', 'Hora', 'Fecha'])
-	};
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: sourceData.length,
+		amounts: [1,2,5,10],
+	} satisfies PaginationSettings;
+	
+	$: paginatedSource = sourceData.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+
 </script>
 
 <AppBar class="w-full">
@@ -39,5 +48,8 @@
 	</div>
 </div>
 <div class="px-20 py-5">
-	<Table source={tableSimple} />
+	<Table source={{head: ['Nombre', 'Número Patente', 'Hora', 'Fecha'], body: tableMapperValues(paginatedSource,  ['nombreDueño', 'nPatente', 'Hora', 'Fecha'])}} interactive={true}/>
+	<Paginator bind:settings={paginationSettings}
+	showFirstLastButtons="{true}"
+	showPreviousNextButtons="{true}" />
 </div>
