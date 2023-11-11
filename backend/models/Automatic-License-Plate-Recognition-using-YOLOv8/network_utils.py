@@ -2,7 +2,7 @@ import requests
 import json
 
 def send_license_plate_data(data):
-    api_endpoint = '' 
+    api_endpoint = 'http://127.0.0.1:8001/horarios' 
     headers = {'Content-Type': 'application/json'}
 
     try:

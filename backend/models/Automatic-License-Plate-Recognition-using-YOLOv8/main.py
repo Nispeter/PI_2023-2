@@ -85,14 +85,13 @@ def detect_license_plate():
                 if license_plate_text:
                     current_time = datetime.datetime.now().isoformat()
                     license_plate_info = {
-                        'frame_number': idx,
                         'car_id': car_id,
-                        'license': license_plate_text,
-                        'probability': license_plate_text_score,
                         'time': current_time,
                         'lugar': {
-                            "camId":"1",
-                        }
+                            'cam_id': '3',  # Update this value as needed
+                        },
+                        'licence': license_plate_text,
+                        'probability': license_plate_text_score
                     }
                     response_data.append(license_plate_info)
                     #send_license_plate_data(license_plate_text)
