@@ -1,4 +1,4 @@
-from fastapi import APIRouter,status,Response
+from fastapi import APIRouter,status,Response,HTTPException
 from passlib.hash import sha256_crypt ##pa los usuarios (preguntar si horario == usuario)
 from bson import ObjectId
 from starlette.status import HTTP_204_NO_CONTENT
@@ -18,6 +18,17 @@ async def find_all_horarios():
 async def find_horario(id: str):
     return horarioEntity(con.test.horario.find_one({"_id": ObjectId(id)}))
     
+@horario.get('/horarios/car_id/{id}')
+async def find_horario(car_id: int):
+    # Buscar el horario por el campo "car_id"
+    horario_document = con.test.horario.find_one({"car_id": car_id})
+
+    # Si no se encuentra el horario, devolver un error 404
+    if horario_document is None:
+        raise HTTPException(status_code=404, detail="Horario no encontrado")
+
+    # Crear la entidad de horario y devolverla
+    return horarioEntity(horario_document)
 
 @horario.post('/horarios')
 async def create_horario(horario: Horario):
