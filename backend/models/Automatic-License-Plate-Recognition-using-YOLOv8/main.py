@@ -94,7 +94,7 @@ def detect_license_plate():
                         'probability': license_plate_text_score
                     }
                     response_data.append(license_plate_info)
-                    #send_license_plate_data(license_plate_text)
+                    send_license_plate_data(license_plate_text)
 
     return jsonify(response_data)
 
