@@ -13,10 +13,13 @@ Luego de tener el ambiente activado y las dependencias activadas
 ```python client.py```
 # Base de datos
 ## Instalacion
+- Crear ambiente\
 ```python -m venv python=3.11.4 venv```
+- Activar el ambiente\
 ```./env/Scripts/activate```
-alternativamente\
+- Alternativamente\
 ```source ./venv/bin/activate```
+- Instalar las dependencias\
 ```pip install -r requirements.txt```
 ## Uso
 desde backend/database/\
