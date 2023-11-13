@@ -63,6 +63,7 @@ frame_buffer = []
 
 @app.route('/detect_license_plate', methods=['POST'])
 def detect_license_plate():
+
     image_file = request.files['image'].read()
     np_image = np.frombuffer(image_file, np.uint8)
     frame = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
@@ -83,18 +84,20 @@ def detect_license_plate():
                 license_plate_text_score = license_plate_data.get('text_score', None)
 
                 if license_plate_text:
-                    current_time = datetime.datetime.now().isoformat()
+                    current_time = datetime.now().isoformat()
+                    #print("data types: ", type(car_id),type(current_time), type(license_plate_text), type(license_plate_text_score) )
                     license_plate_info = {
-                        'car_id': car_id,
-                        'time': current_time,
-                        'lugar': {
-                            'cam_id': '3',  # Update this value as needed
+                        "car_id": car_id,
+                        "time": current_time,
+                        "lugar": {
+                            "cam_id": "3",  
                         },
-                        'licence': license_plate_text,
-                        'probability': license_plate_text_score
+                        "licence": license_plate_text,
+                        "probability": license_plate_text_score
                     }
+                    print(license_plate_info)
                     response_data.append(license_plate_info)
-                    send_license_plate_data(license_plate_text)
+                    send_license_plate_data(license_plate_info)
 
     return jsonify(response_data)
 

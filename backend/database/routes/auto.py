@@ -42,3 +42,16 @@ async def delete_auto(id: str):
     })
     return Response(status_code=HTTP_204_NO_CONTENT)
     
+#@auto.get('/autos/check_plate/{license_plate}')
+async def check_license_plate(license_plate: str):
+    auto_document = con.test.auto.find_one({"patente": license_plate})
+    if auto_document:
+        return {"status": "found", "auto": autoEntity(auto_document)}
+    else:
+        handle_license_plate_not_found(license_plate)
+        return {"status": "not found"}
+
+
+def handle_license_plate_not_found(license_plate: str):
+    print(":(")
+    #Check  time or smt

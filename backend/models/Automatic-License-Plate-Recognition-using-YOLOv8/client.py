@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 import cv2
@@ -22,6 +23,7 @@ else:
             with open(frame_filename, 'rb') as image_file:
                 response = requests.post(url, files={"image": image_file})
             print(f"Sent frame {frame_count}. Server response:", response.json())
+            os.remove(frame_filename)
             time.sleep(0.5)
         frame_count += 1
 
