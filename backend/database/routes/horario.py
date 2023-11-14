@@ -21,7 +21,7 @@ async def find_horarios_in_range(licence: str, timestamp: int):
         {
             "licence": licence,
             "time" :{
-                '$gte': (datetime.fromtimestamp(timestamp) - timedelta(minutes=40)),
+                '$gte': (datetime.fromtimestamp(timestamp) - timedelta(minutes=300)),
                 '$lte': datetime.fromtimestamp(timestamp)
             }
         }

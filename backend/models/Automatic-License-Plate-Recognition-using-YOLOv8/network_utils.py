@@ -24,6 +24,23 @@ def send_license_plate_data(data):
 def isSuspiciousBehaviour(licensePlate):
     api_endpoint = url+'/horarios/30minuteTimeRange/'+licensePlate+'/'+str(int(datetime.timestamp(datetime.now())))
     response = requests.get(api_endpoint)
-    print("-----------------------------------------------------------")
-    print(response.json())
-    print("-----------------------------------------------------------")
+    camSet = set()
+    for detection in response.json():
+        camSet.add(int(detection['lugar']['cam_id']))
+    
+stored_plates = []
+def cache_plates():
+    global stored_plates
+    try:
+        response = requests.get(url+'/autos_plates')
+        response.raise_for_status()
+        stored_plates = response.json()
+    except requests.RequestException as e: 
+        print("Error: ",e)
+
+def check_license_plate(plate):
+    if plate in stored_plates:
+        return True
+    else:
+        #isSuspiciousBehaviour(plate)
+        return False

@@ -24,7 +24,7 @@ else:
                 response = requests.post(url, files={"image": image_file})
             print(f"Sent frame {frame_count}. Server response:", response.json())
             os.remove(frame_filename)
-            time.sleep(0.5)
+            #time.sleep(0.5)
         frame_count += 1
 
     video.release()
