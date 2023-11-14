@@ -17,7 +17,11 @@ async def find_all_personas():
 @persona.get('/personas/{id}')
 async def find_persona(id: str):
     return personaEntity(con.test.persona.find_one({"_id": ObjectId(id)}))
-    
+
+@persona.get('/personas/rut/{rut}')
+async def find_persona(rut: str):
+    return personaEntity(con.test.persona.find_one({"rut": ObjectId(rut)}))
+       
 
 @persona.post('/personas')
 async def create_persona(persona: Persona):
