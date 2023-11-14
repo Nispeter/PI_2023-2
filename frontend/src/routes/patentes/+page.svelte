@@ -10,16 +10,34 @@
 	import { get } from 'svelte/store';
 	import backArrow from '$lib/images/back-arrow.svg'
 	import logoutIcon from '$lib/images/logout.svg'
+	import plusIcon from '$lib/images/plus.svg'
+	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+	import modalForm from './components/modalForm.svelte'
 
 
 	export let data: PageData;
+			
+	const modalStore = getModalStore();
 
-	onMount(async ()=> {
-		await auth.createClient();
-		if(!get(isAuthenticated)){
-			goto("/login")
-		}
-	})
+
+	const modalComponent: ModalComponent = { ref: modalForm };
+
+	const modal: ModalSettings = {
+		title: 'Ingresar registro.',
+		body: 'Rellene el formulario.',
+		type: 'component',
+		component: modalComponent,
+	};
+	// modalStore.trigger(modal);
+	if ($modalStore[0]) console.log($modalStore[0].title);
+
+	// onMount(async ()=> {
+	// 	await auth.createClient();
+	// 	if(!get(isAuthenticated)){
+	// 		goto("/login")
+	// 	}
+	// })
 
 	async function logout() {
 		await auth.logout();
@@ -36,6 +54,11 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	let modalFlag : boolean = false;
+	function triggerModal(){
+		modalFlag = true;
+		modalStore.trigger(modal)
+	}
 
 	// const tableSimple : TableSource = {
 	// 	head: ['ID', 'Name'],
@@ -86,4 +109,14 @@
 		<!-- <Paginator bind:settings={paginationSettings} showFirstLastButtons={true} showPreviousNextButtons={true}/> -->
 		<Paginator bind:settings={paginationSettings} showNumerals={true} justify="justify-between" class='mt-10'/>
 	</div>
+<div class="flex justify-end px-20">
+	<button type="button" on:click={triggerModal} class="btn-icon variant-filled-primary justify-self-end" on:click={logout}>
+		<picture>
+			<img src="{plusIcon}" alt="salir" width="20" height="20">
+		</picture>
+	</button>
+</div>
 </section>
+{#if modalFlag}
+	<Modal/>
+{/if}
