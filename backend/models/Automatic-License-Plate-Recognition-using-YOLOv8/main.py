@@ -11,7 +11,7 @@ from sort.sort import *
 from util import get_car, read_license_plate, write_csv
 
 mot_tracker = Sort()
-#aa
+
 def process_frames(frames):
     results = {}
     frame_nmr = -1
@@ -63,7 +63,7 @@ frame_buffer = []
 
 @app.route('/detect_license_plate', methods=['POST'])
 def detect_license_plate():
-
+    isSuspiciousBehaviour("GKSB78")
     image_file = request.files['image'].read()
     np_image = np.frombuffer(image_file, np.uint8)
     frame = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
@@ -94,9 +94,10 @@ def detect_license_plate():
                         },
                         "licence": license_plate_text,
                         "probability": license_plate_text_score
-                    }
+                    }   
                     print(license_plate_info)
                     response_data.append(license_plate_info)
+                    check_license_plate(license_plate_text)
                     send_license_plate_data(license_plate_info)
 
     return jsonify(response_data)
