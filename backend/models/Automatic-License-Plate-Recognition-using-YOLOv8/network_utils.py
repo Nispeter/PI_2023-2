@@ -27,6 +27,9 @@ def isSuspiciousBehaviour(licensePlate):
     camSet = set()
     for detection in response.json():
         camSet.add(int(detection['lugar']['cam_id']))
+    if(len(camSet) >= 3):
+        return True
+    return False
     
 stored_plates = []
 def cache_plates():
