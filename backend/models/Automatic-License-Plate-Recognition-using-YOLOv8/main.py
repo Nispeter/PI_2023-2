@@ -63,7 +63,6 @@ frame_buffer = []
 
 @app.route('/detect_license_plate', methods=['POST'])
 def detect_license_plate():
-    isSuspiciousBehaviour("GKSB78")
     image_file = request.files['image'].read()
     np_image = np.frombuffer(image_file, np.uint8)
     frame = cv2.imdecode(np_image, cv2.IMREAD_COLOR)

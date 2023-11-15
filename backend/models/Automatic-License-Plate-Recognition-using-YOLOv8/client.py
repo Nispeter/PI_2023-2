@@ -3,6 +3,20 @@ import time
 import requests
 import cv2
 
+
+# import asyncio
+# from telegram import Bot
+
+# async def sendTelegram():
+#     bot = Bot(token="6727869623:AAEs75zZa7-_KnVQkF9Hvl2n8MzllTeI5MM")
+#     await bot.send_message(chat_id=901902380, text='OE AY TERRIBLE NAE SOSPECHOSA POR AHI CUIDAITOO')
+
+# async def main():
+#     await sendTelegram()
+
+# if __name__ == "__main__":
+#     asyncio.run(main())
+
 url = "http://127.0.0.1:5000/detect_license_plate"
 
 video_filename = "./images/gringo/sample.mp4"
