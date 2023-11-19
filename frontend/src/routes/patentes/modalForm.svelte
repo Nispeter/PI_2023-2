@@ -7,22 +7,23 @@
 	import { get } from 'svelte/store';
 	import { goto } from '$app/navigation';
 	import axios, {AxiosError} from 'axios';
+	import { createEventDispatcher } from 'svelte';
+	import { load } from './+page';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
+	const dispatch = createEventDispatcher<{updateame : boolean}>();
+	//const dispatch = createEventDispatcher();
 
 	// Form Data
 	const formData = {
-		name: 'Jane Doe',
+		modelo: 'Subaru',
 		rut: '11.111.111-1',
 		patente: 'ABCD-11',
 		año: '2023',
-		propietario: [
-			"653cd32c3b930cb8658f685b"
-		]
 	};
 	// onMount(async ()=> {
 	// 	if(!get(isAuthenticated)){
@@ -41,6 +42,12 @@
 		try{
 			const response = await axios.post('http://127.0.0.1:8000/autos', formData);
 			console.log(response.data);
+			// dispatch('updateame',false);
+			const noname = () => {
+				dispatch('updateame',false);
+			}
+			noname();
+			load();
 		}catch(e){
 			if(axios.isAxiosError(e)){
 				console.log(e.response);
@@ -50,6 +57,11 @@
 		console.log(formData);
 		modalStore.close();
 	}
+	// function FormSubmit():void{
+	// 	if($modalStore[0].response){
+	// 		dispatch('formData', formData);
+	// 	}
+	// }
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
@@ -64,18 +76,22 @@
 		<header class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</header>
 		<article>{$modalStore[0].body ?? '(body missing)'}</article>
 		<!-- Enable for debugging: -->
-		<form class="modal-form {cForm}" method="POST">
+		<form class="modal-form {cForm}">
 			<label class="label">
-				<span>Name</span>
-				<input class="input" type="text" bind:value={formData.name} name="name" placeholder="Ingresar nombre..." />
+				<span>Modelo</span>
+				<input class="input" type="text" bind:value={formData.modelo} name="modelo" placeholder="Ingresar nombre..." />
 			</label>
 			<label class="label">
 				<span>RUT</span>
 				<input class="input" type="text" bind:value={formData.rut} name="rut" placeholder="Ingresar rut..." />
 			</label>
 			<label class="label">
-				<span>Email</span>
+				<span>Patente</span>
 				<input class="input" type="text" bind:value={formData.patente} name="patente" placeholder="Ingresar patente..." />
+			</label>
+			<label class="label">
+				<span>Año</span>
+				<input class="input" type="text" bind:value={formData.año} name="año" placeholder="Ingresar año..." />
 			</label>
 		</form>
 		<!-- prettier-ignore -->

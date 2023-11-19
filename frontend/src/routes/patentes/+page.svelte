@@ -4,22 +4,21 @@
 	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
 	import type { PaginationSettings, TableSource } from '@skeletonlabs/skeleton';
 	import { Paginator, AppBar } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
+	import { onMount, type ComponentEvents } from 'svelte';
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
-	import backArrow from '$lib/images/back-arrow.svg'
-	import logoutIcon from '$lib/images/logout.svg'
-	import plusIcon from '$lib/images/plus.svg'
+	import backArrow from '$lib/images/back-arrow.svg';
+	import logoutIcon from '$lib/images/logout.svg';
+	import plusIcon from '$lib/images/plus.svg';
 	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
-	import modalForm from './modalForm.svelte'
-
+	import modalForm from './modalForm.svelte';
+	import { load } from './+page';
 
 	export let data: PageData;
-			
-	const modalStore = getModalStore();
 
+	const modalStore = getModalStore();
 
 	const modalComponent: ModalComponent = { ref: modalForm };
 
@@ -27,17 +26,16 @@
 		title: 'Ingresar registro.',
 		body: 'Rellene el formulario.',
 		type: 'component',
-		component: modalComponent,
+		component: modalComponent
 	};
 	// modalStore.trigger(modal);
 	if ($modalStore[0]) console.log($modalStore[0].title);
 
-	// onMount(async ()=> {
-	// 	if(!get(isAuthenticated)){
-	// 		console.log("a")
-	// 		goto("/login")
-	// 	}
-	// })
+	onMount(async ()=> {
+		if(!get(isAuthenticated)){
+			goto("/login")
+		}
+	})
 
 	async function logout() {
 		await auth.logout();
@@ -53,10 +51,16 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-	let modalFlag : boolean = false;
-	function triggerModal(){
+	let modalFlag: boolean = false;
+	function triggerModal() {
 		modalFlag = true;
-		modalStore.trigger(modal)
+		modalStore.trigger(modal);
+	}
+	function handlePostEvent(event: ComponentEvents<modalForm>['updateame']) {
+		console.log(event);
+		if (!event.detail) {
+			console.log('a');
+		}
 	}
 
 	// const tableSimple : TableSource = {
@@ -67,7 +71,6 @@
 	let is_selected = false;
 
 	let table_item1: HTMLElement | null = null;
-
 </script>
 
 <!-- <Table source={tableSimple} interactive={true} /> -->
@@ -79,7 +82,7 @@
 	<svelte:fragment slot="lead">
 		<a href="/historial">
 			<picture>
-				<img src="{backArrow}" alt="Volver" width="20" height="20">
+				<img src={backArrow} alt="Volver" width="20" height="20" />
 			</picture>
 		</a>
 	</svelte:fragment>
@@ -90,7 +93,7 @@
 	<svelte:fragment slot="trail">
 		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
 			<picture>
-				<img src="{logoutIcon}" alt="salir" width="20" height="20">
+				<img src={logoutIcon} alt="salir" width="20" height="20" />
 			</picture>
 		</button>
 	</svelte:fragment>
@@ -98,20 +101,32 @@
 <section>
 	<div class="p-20">
 		<Table
-			source={{ head: ['PATENTE', 'MODELO', 'AÑO'], body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'año']) }}
+			source={{
+				head: ['PATENTE', 'MODELO', 'AÑO'],
+				body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'año'])
+			}}
 			interactive={true}
 		/>
 		<!-- <Paginator bind:settings={paginationSettings} showFirstLastButtons={true} showPreviousNextButtons={true}/> -->
-		<Paginator bind:settings={paginationSettings} showNumerals={true} justify="justify-between" class='mt-10'/>
+		<Paginator
+			bind:settings={paginationSettings}
+			showNumerals={true}
+			justify="justify-between"
+			class="mt-10"
+		/>
 	</div>
-<div class="flex justify-end px-20">
-	<button type="button" on:click={triggerModal} class="btn-icon variant-filled-primary justify-self-end" on:click={logout}>
-		<picture>
-			<img src="{plusIcon}" alt="salir" width="20" height="20">
-		</picture>
-	</button>
-</div>
+	<div class="flex justify-end px-20">
+		<button
+			type="button"
+			on:click={triggerModal}
+			class="btn-icon variant-filled-primary justify-self-end"
+		>
+			<picture>
+				<img src={plusIcon} alt="salir" width="20" height="20" />
+			</picture>
+		</button>
+	</div>
 </section>
 {#if modalFlag}
-	<Modal/>
+	<Modal on:updateame={(e) => {console.log(e)}} />
 {/if}
