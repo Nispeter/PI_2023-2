@@ -38,12 +38,13 @@ def isSuspiciousBehaviour(licensePlate):
     if len(camSet) >= 3:
         with ThreadPoolExecutor() as executor:
             executor.submit(send_telegram_async)
-    return True
+        return True
+    return False
     
 async def sendTelegram():
-    bot = telegram.Bot("6727869623:AAEs75zZa7-_KnVQkF9Hvl2n8MzllTeI5MM")
+    #bot = telegram.Bot("") SE AGREGA TOKEN
     async with bot:
-        await bot.send_message(text='OE AY TERRIBLE NAE SOSPECHOSA POR AHI CUIDAITOO', chat_id=901902380)
+        await bot.send_message(text='Mensaje serio que incluye patente peligrosa', chat_id=901902380)
 
 stored_horarios = []
 def cache_horarios():
