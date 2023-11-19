@@ -13,7 +13,7 @@
 	import plusIcon from '$lib/images/plus.svg'
 	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
-	import modalForm from './components/modalForm.svelte'
+	import modalForm from './modalForm.svelte'
 
 
 	export let data: PageData;
@@ -33,8 +33,8 @@
 	if ($modalStore[0]) console.log($modalStore[0].title);
 
 	// onMount(async ()=> {
-	// 	await auth.createClient();
 	// 	if(!get(isAuthenticated)){
+	// 		console.log("a")
 	// 		goto("/login")
 	// 	}
 	// })
@@ -42,15 +42,14 @@
 	async function logout() {
 		await auth.logout();
 	}
-
 	let paginationSettings = {
 		page: 0,
 		limit: 5,
-		size: data.allpokemon.results.length,
+		size: data.allCars.length,
 		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
 
-	$: paginatedSource = data.allpokemon.results.slice(
+	$: paginatedSource = data.allCars.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
@@ -69,10 +68,6 @@
 
 	let table_item1: HTMLElement | null = null;
 
-	$: {
-		if (table_item1 != null) {
-		}
-	}
 </script>
 
 <!-- <Table source={tableSimple} interactive={true} /> -->
@@ -103,7 +98,7 @@
 <section>
 	<div class="p-20">
 		<Table
-			source={{ head: ['URL', 'NAME'], body: tableMapperValues(paginatedSource, ['url', 'name']) }}
+			source={{ head: ['PATENTE', 'MODELO', 'AÑO'], body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'año']) }}
 			interactive={true}
 		/>
 		<!-- <Paginator bind:settings={paginationSettings} showFirstLastButtons={true} showPreviousNextButtons={true}/> -->
