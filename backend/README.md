@@ -1,6 +1,6 @@
 # Modelo
 ## Instalacion 
-desde backend/models/
+desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
 - Crear un ambiente con python=3.8:\
 ```conda create --prefix ./env python==3.8 -y```
 - Instalar las dependencias: \
@@ -14,7 +14,7 @@ Luego de tener el ambiente activado y las dependencias activadas
 # Base de datos
 ## Instalacion
 - Crear ambiente\
-```python -m venv python=3.11.4 venv```
+```python -m venv venv```
 - Activar el ambiente\
 ```./env/Scripts/activate```
 - Alternativamente\
