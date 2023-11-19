@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
 from models.persona import Persona
 class Auto(BaseModel):
     patente: str
     modelo: str
     año: int
-    propietario: List[str]
+    rut: str
