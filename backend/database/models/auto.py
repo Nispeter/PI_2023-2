@@ -5,4 +5,4 @@ class Auto(BaseModel):
     patente: str
     modelo: str
     año: int
-    propietario: dict = Field(..., alias="propietario")
+    rut: str

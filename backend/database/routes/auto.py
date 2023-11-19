@@ -23,7 +23,7 @@ async def find_auto(id: str):
 
 @auto.post('/autos')
 async def create_auto(auto: Auto):
-    rut_propietario = auto.propietario["rut"]
+    rut_propietario = auto.rut
     persona_data = con.test.persona.find_one({"rut": rut_propietario})
     
     print("Tipo de persona_data:", type(persona_data))
