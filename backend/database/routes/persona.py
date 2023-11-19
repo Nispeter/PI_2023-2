@@ -20,7 +20,7 @@ async def find_persona(id: str):
 
 @persona.get('/personas/rut/{rut}')
 async def find_persona(rut: str):
-    return personaEntity(con.test.persona.find_one({"rut": ObjectId(rut)}))
+    return personaEntity(con.test.persona.find_one({"rut": rut}))
        
 
 @persona.post('/personas')
