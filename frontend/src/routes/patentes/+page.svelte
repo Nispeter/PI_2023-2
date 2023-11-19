@@ -8,18 +8,16 @@
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
-	import backArrow from '$lib/images/back-arrow.svg'
-	import logoutIcon from '$lib/images/logout.svg'
-
+	import backArrow from '$lib/images/back-arrow.svg';
+	import logoutIcon from '$lib/images/logout.svg';
 
 	export let data: PageData;
 
-	onMount(async ()=> {
-		await auth.createClient();
-		if(!get(isAuthenticated)){
-			goto("/login")
+	onMount(async () => {
+		if (!get(isAuthenticated)) {
+			goto('/login');
 		}
-	})
+	});
 
 	async function logout() {
 		await auth.logout();
@@ -61,7 +59,7 @@
 	<svelte:fragment slot="lead">
 		<a href="/historial">
 			<picture>
-				<img src="{backArrow}" alt="Volver" width="20" height="20">
+				<img src={backArrow} alt="Volver" width="20" height="20" />
 			</picture>
 		</a>
 	</svelte:fragment>
@@ -72,7 +70,7 @@
 	<svelte:fragment slot="trail">
 		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
 			<picture>
-				<img src="{logoutIcon}" alt="salir" width="20" height="20">
+				<img src={logoutIcon} alt="salir" width="20" height="20" />
 			</picture>
 		</button>
 	</svelte:fragment>
@@ -84,6 +82,11 @@
 			interactive={true}
 		/>
 		<!-- <Paginator bind:settings={paginationSettings} showFirstLastButtons={true} showPreviousNextButtons={true}/> -->
-		<Paginator bind:settings={paginationSettings} showNumerals={true} justify="justify-between" class='mt-10'/>
+		<Paginator
+			bind:settings={paginationSettings}
+			showNumerals={true}
+			justify="justify-between"
+			class="mt-10"
+		/>
 	</div>
 </section>
