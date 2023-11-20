@@ -10,13 +10,13 @@ async function createClient() {
 			clientId: ENV.auth0.id,
 			authorizationParams: {
 				redirect_uri: ENV.auth0.callback,
-				scope: 'openid profile email'
+				scope: "openid profile email"
 			}
 		})
 	);
 
 	isAuthenticated.set(await get(authClient).isAuthenticated());
-	user.set(await get(authClient).getUser() ?? {});
+	user.set((await get(authClient).getUser()) ?? {});
 }
 
 async function loginWithPopup() {
@@ -27,6 +27,7 @@ async function loginWithPopup() {
 		const userData = await client.getUser();
 		user.set(userData ?? {});
 		isAuthenticated.set(await client.isAuthenticated());
+
 	} catch (e) {
 		console.error(e);
 	} finally {

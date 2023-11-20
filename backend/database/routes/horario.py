@@ -2,6 +2,7 @@ from fastapi import APIRouter,status,Response,HTTPException
 from passlib.hash import sha256_crypt ##pa los usuarios (preguntar si horario == usuario)
 from bson import ObjectId
 from starlette.status import HTTP_204_NO_CONTENT
+from datetime import datetime, timedelta
 
 from config.db import con
 from schemas.horario import horarioEntity, horariosEntity
@@ -14,7 +15,19 @@ horario = APIRouter()
 async def find_all_horarios():
      return horariosEntity(con.test.horario.find())
 
-@horario.get('/horarios/{id}')
+@horario.get('/horarios/30minuteTimeRange/{licence}/{timestamp}')
+async def find_horarios_in_range(licence: str, timestamp: int):
+    return horariosEntity(con.test.horario.find(
+        {
+            "licence": licence,
+            "time" :{
+                '$gte': (datetime.fromtimestamp(timestamp) - timedelta(minutes=300)),
+                '$lte': datetime.fromtimestamp(timestamp)
+            }
+        }
+    ))
+
+@horario.get('/horarios/{id}') 
 async def find_horario(id: str):
     return horarioEntity(con.test.horario.find_one({"_id": ObjectId(id)}))
     

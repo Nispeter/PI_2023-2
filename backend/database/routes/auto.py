@@ -2,12 +2,19 @@ from fastapi import APIRouter,status,Response
 from passlib.hash import sha256_crypt ##pa los usuarios (preguntar si auto == usuario)
 from bson import ObjectId
 from starlette.status import HTTP_204_NO_CONTENT
+<<<<<<< HEAD
 import json 
 from config.db import con
 from schemas.auto import autoEntity, autosEntity
 from models.auto import Auto
 from models.persona import Persona
 from schemas.persona import personaEntity, personasEntity
+=======
+
+from config.db import con
+from schemas.auto import autoEntity, autosEntity
+from models.auto import Auto
+>>>>>>> dev
 
 
 auto = APIRouter()
@@ -23,6 +30,7 @@ async def find_auto(id: str):
 
 @auto.post('/autos')
 async def create_auto(auto: Auto):
+<<<<<<< HEAD
     rut_propietario = auto.rut
     persona_data = con.test.persona.find_one({"rut": rut_propietario})
     
@@ -55,6 +63,12 @@ async def create_auto(auto: Auto):
     return autoEntity(con.test.auto.find_one({"_id": ObjectId(auto_id)}))
 
 
+=======
+    new_auto = dict(auto)
+    
+    id = con.test.auto.insert_one(new_auto).inserted_id
+    return str(id)
+>>>>>>> dev
 
 @auto.put('/autos/{id}')
 async def update_auto(id: str, auto: Auto):
@@ -71,4 +85,14 @@ async def delete_auto(id: str):
         "_id": ObjectId(id)
     })
     return Response(status_code=HTTP_204_NO_CONTENT)
+<<<<<<< HEAD
     
+=======
+    
+@auto.get('/autos_plates')
+async def get_plates():
+    autos_documents = con.test.auto.find()
+    autos_list = autosEntity(autos_documents)
+    plates = [auto["patente"] for auto in autos_list]
+    return plates
+>>>>>>> dev
