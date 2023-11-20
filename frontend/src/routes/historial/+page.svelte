@@ -5,6 +5,7 @@
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { Paginator } from '@skeletonlabs/skeleton';
+	import type { PaginationSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { isAuthenticated } from '../../store';
