@@ -1,10 +1,25 @@
 <script lang="ts">
+	import { auth } from '$lib/auth';
 	import { Table } from '@skeletonlabs/skeleton';
 	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { Paginator } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+	import { isAuthenticated } from '../../store';
+	import { goto } from '$app/navigation';
+	import logoutIcon from '$lib/images/logout.svg';
 
+	onMount(async () => {
+		if (!get(isAuthenticated)) {
+			goto('/login');
+		}
+	});
+
+	async function logout() {
+		await auth.logout();
+	}
 	const sourceData = [
 		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '20:15', Fecha: '05/10/2023' },
 		{ nombreDueño: 'Maria Espinoza', nPatente: 'MR LX 88', Hora: '20:07', Fecha: '05/10/2023' },
@@ -31,19 +46,35 @@
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
+
+	const goPatentes = () => {
+		goto('/patentes');
+	};
 </script>
 
-<AppBar class="w-full">
-	<h1 class="h1 font-sans" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
-	<h3 class="h3 font-sans" data-toc-ignore>
-		Bienvenidos a su aplicacion de reconocimiento de vehiculos
-	</h3>
+<svelte:head>
+	<title>Historial</title>
+</svelte:head>
+
+<AppBar slotTrail="place-content-end">
+	<h1 class="h1" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
+	<h3 class="h3" data-toc-ignore>Bienvenidos a su aplicacion de reconocimiento de vehiculos</h3>
+
+	<svelte:fragment slot="trail">
+		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
+			<picture>
+				<img src={logoutIcon} alt="salir" width="20" height="20" />
+			</picture>
+		</button>
+	</svelte:fragment>
 </AppBar>
 
 <div class="w-full p-10">
 	<div class="flex justify-end">
 		<div>
-			<button type="button" class="btn variant-filled">Administrar Base de Datos</button>
+			<button type="button" class="btn variant-filled" on:click={goPatentes}
+				>Administrar Base de Datos</button
+			>
 		</div>
 	</div>
 </div>
