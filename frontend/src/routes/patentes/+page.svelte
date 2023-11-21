@@ -31,11 +31,11 @@
 	// modalStore.trigger(modal);
 	if ($modalStore[0]) console.log($modalStore[0].title);
 
-	onMount(async () => {
-		if (!get(isAuthenticated)) {
-			goto('/login');
+	onMount(async ()=> {
+		if(!get(isAuthenticated)){
+			goto("/login")
 		}
-	});
+	})
 
 	async function logout() {
 		await auth.logout();
@@ -57,7 +57,10 @@
 		modalStore.trigger(modal);
 	}
 	function handlePostEvent(event: ComponentEvents<modalForm>['updateame']) {
-		console.log(event.detail);
+		console.log(event);
+		if (!event.detail) {
+			console.log('a');
+		}
 	}
 
 	// const tableSimple : TableSource = {
@@ -125,5 +128,5 @@
 	</div>
 </section>
 {#if modalFlag}
-	<Modal on:updateame={handlePostEvent} />
+	<Modal on:updateame={(e) => {console.log(e)}} />
 {/if}
