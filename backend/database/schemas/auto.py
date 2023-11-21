@@ -4,7 +4,7 @@ def autoEntity(item) -> dict:
         "patente": item["patente"],
         "modelo": item["modelo"],
         "año": item["año"],
-        "propietario": [str(owner_id) for owner_id in item.get("propietario", [])]
+        "propietario": item["propietario"]
     }
 def autosEntity(entity) -> list:
     return [autoEntity(item) for item in entity]
