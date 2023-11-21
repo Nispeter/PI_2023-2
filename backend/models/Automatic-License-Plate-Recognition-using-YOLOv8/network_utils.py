@@ -7,10 +7,11 @@ import telegram
 
 url = 'http://127.0.0.1:8000'
 
+
 def send_license_plate_data(data):
+    #Envía datos de placas de vehículos a un endpoint de API específico.
     api_endpoint = url+'/horarios' 
     headers = {'Content-Type': 'application/json'}
-
     try:
         response = requests.post(api_endpoint, headers=headers, data=json.dumps(data))
         response.raise_for_status()
@@ -25,11 +26,15 @@ def send_license_plate_data(data):
         print('Error:', err)
 
 def send_telegram_async():
+    #Inicia una tarea asíncrona para enviar un mensaje a Telegram.
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     loop.run_until_complete(sendTelegram())
 
 def isSuspiciousBehaviour(licensePlate):
+    #Evalúa si el comportamiento de una placa es sospechoso basándose en ciertos criterios.
+    #Esta condicion se customiza dependiendo de la poblacion, 
+        #Por defecto un auto sospechoso es aquel que se detecta por 3 camaras distintas en un rango de tiempo menor a 30 minutos
     api_endpoint = url+'/horarios/30minuteTimeRange/'+licensePlate+'/'+str(int(datetime.timestamp(datetime.now())))
     response = requests.get(api_endpoint)
     camSet = set()
@@ -42,12 +47,14 @@ def isSuspiciousBehaviour(licensePlate):
     return False
     
 async def sendTelegram():
-    #bot = telegram.Bot("") SE AGREGA TOKEN
+    #Función asíncrona para enviar mensajes a través de Telegram.
+    #bot = telegram.Bot("") <---------------------------------------SE AGREGA TOKEN
     async with bot:
         await bot.send_message(text='Mensaje serio que incluye patente peligrosa', chat_id=901902380)
 
-stored_horarios = []
+stored_horarios = []        
 def cache_horarios():
+    #Cachear los datos de registro de deteccion obtenidos de un endpoint de API, para detectar mas rapidamente.
     global stored_horarios
     try:
         response = requests.get(url+'/horarios')
@@ -58,6 +65,7 @@ def cache_horarios():
 
 stored_plates = []
 def cache_plates():
+    #Cachear los datos de placas de vehículos registrados en la comunidad, obtenidos de un endpoint de API, para detectar mas rapidamente.
     global stored_plates
     try:
         response = requests.get(url+'/autos_plates')
@@ -67,6 +75,8 @@ def cache_plates():
         print("Error: ",e)
 
 def check_horarios(horario):
+     #Verifica y actualiza los datos de deteccion de patente almacenados en caché.
+     #Al detectar una patente se reemplaza la deteccion si se obtiene una probabilidad mas alta, en vez de registrar todas las petentes detectadas, a menos que no este registrada
     global stored_horarios
     found = False
 
@@ -91,6 +101,7 @@ def check_horarios(horario):
             print("Error:", e)
 
 def check_license_plate(plate):
+     #Verifica si una placa está en la caché (osea que esta registrada como de la comunidad)
     if plate in stored_plates:
         return True
     else:
