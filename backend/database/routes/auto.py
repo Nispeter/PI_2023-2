@@ -19,7 +19,12 @@ async def find_all_autos():
 @auto.get('/autos/{id}')
 async def find_auto(id: str):
     return autoEntity(con.test.auto.find_one({"_id": ObjectId(id)}))
+
+@auto.get('/autos/patente/{patente}')
+async def find_auto(patente: str):
+    return autoEntity(con.test.auto.find_one({"patente": patente}))
     
+
 
 @auto.post('/autos')
 async def create_auto(auto: Auto):
