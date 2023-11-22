@@ -11,31 +11,42 @@
 	import backArrow from '$lib/images/back-arrow.svg';
 	import logoutIcon from '$lib/images/logout.svg';
 	import plusIcon from '$lib/images/plus.svg';
-	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
-	import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+	import { Modal, getModalStore, initializeStores } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
 	import modalForm from './modalForm.svelte';
-	import { load } from './+page';
+
+	initializeStores();
 
 	export let data: PageData;
 
 	const modalStore = getModalStore();
 
-	const modalComponent: ModalComponent = { ref: modalForm };
+	const modalRegistry: Record<string, ModalComponent> = {
+		modalComponent: { ref: modalForm }
+	};
 
 	const modal: ModalSettings = {
 		title: 'Ingresar registro.',
 		body: 'Rellene el formulario.',
 		type: 'component',
-		component: modalComponent
+		component: 'modalComponent',
+		response(r) {
+			/**
+			puedes definir aqui el post pero esta debe ser una funcion asyncrona  
+			de definir el post dentro de modalForm entonces debes seguir esto
+			https://www.skeleton.dev/utilities/modals#async-response
+			**/
+			console.log(r);
+		}
 	};
 	// modalStore.trigger(modal);
 	if ($modalStore[0]) console.log($modalStore[0].title);
 
-	onMount(async ()=> {
-		if(!get(isAuthenticated)){
-			goto("/login")
+	onMount(async () => {
+		if (!get(isAuthenticated)) {
+			goto('/login');
 		}
-	})
+	});
 
 	async function logout() {
 		await auth.logout();
@@ -55,12 +66,6 @@
 	function triggerModal() {
 		modalFlag = true;
 		modalStore.trigger(modal);
-	}
-	function handlePostEvent(event: ComponentEvents<modalForm>['updateame']) {
-		console.log(event);
-		if (!event.detail) {
-			console.log('a');
-		}
 	}
 
 	// const tableSimple : TableSource = {
@@ -127,6 +132,5 @@
 		</button>
 	</div>
 </section>
-{#if modalFlag}
-	<Modal on:updateame={(e) => {console.log(e)}} />
-{/if}
+
+<Modal components={modalRegistry} />

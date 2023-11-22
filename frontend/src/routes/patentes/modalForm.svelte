@@ -1,29 +1,31 @@
 <script lang="ts">
-	import  type { SvelteComponent }  from 'svelte';
+	import type { SvelteComponent } from 'svelte';
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { isAuthenticated } from '../../store';
-	import { get } from 'svelte/store';
-	import { goto } from '$app/navigation';
-	import axios, {AxiosError} from 'axios';
-	import { createEventDispatcher } from 'svelte';
-	import { load } from './+page';
+	// import { isAuthenticated } from '../../store';
+	// import { get } from 'svelte/store';
+	// import { goto } from '$app/navigation';
+	// import axios, { AxiosError } from 'axios';
 
+	type postData = {
+		modelo: string;
+		rut: string;
+		patente: string;
+		year: string;
+	};
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
-	const dispatch = createEventDispatcher<{updateame : boolean}>();
-	//const dispatch = createEventDispatcher();
 
 	// Form Data
-	const formData = {
+	const formData: postData = {
 		modelo: 'Subaru',
 		rut: '11.111.111-1',
 		patente: 'ABCD-11',
-		año: '2023',
+		year: '2023'
 	};
 	// onMount(async ()=> {
 	// 	if(!get(isAuthenticated)){
@@ -33,28 +35,19 @@
 	// })
 
 	// We've created a custom submit function to pass the response and close the modal.
-	async function onFormSubmit(): Promise<void> {
+	function onFormSubmit() {
+		if ($modalStore[0].response) {
+			/**
+			  esto devuelve la form data como respuesta del modal
+			  Puedes hacer el post aqui mismo
+			  si pones el post aqui debes esperar la respuesta 
+			https://www.skeleton.dev/utilities/modals#async-response			  
 
-		if ($modalStore[0].response){
+			 **/
+
 			$modalStore[0].response(formData);
 		}
-
-		try{
-			const response = await axios.post('http://127.0.0.1:8000/autos', formData);
-			console.log(response.data);
-			// dispatch('updateame',false);
-			const noname = () => {
-				dispatch('updateame',false);
-			}
-			noname();
-			load();
-		}catch(e){
-			if(axios.isAxiosError(e)){
-				console.log(e.response);
-			}
-		} 
-		
-		console.log(formData);
+		// cerrar el modal
 		modalStore.close();
 	}
 	// function FormSubmit():void{
@@ -79,19 +72,43 @@
 		<form class="modal-form {cForm}">
 			<label class="label">
 				<span>Modelo</span>
-				<input class="input" type="text" bind:value={formData.modelo} name="modelo" placeholder="Ingresar nombre..." />
+				<input
+					class="input"
+					type="text"
+					bind:value={formData.modelo}
+					name="modelo"
+					placeholder="Ingresar nombre..."
+				/>
 			</label>
 			<label class="label">
 				<span>RUT</span>
-				<input class="input" type="text" bind:value={formData.rut} name="rut" placeholder="Ingresar rut..." />
+				<input
+					class="input"
+					type="text"
+					bind:value={formData.rut}
+					name="rut"
+					placeholder="Ingresar rut..."
+				/>
 			</label>
 			<label class="label">
 				<span>Patente</span>
-				<input class="input" type="text" bind:value={formData.patente} name="patente" placeholder="Ingresar patente..." />
+				<input
+					class="input"
+					type="text"
+					bind:value={formData.patente}
+					name="patente"
+					placeholder="Ingresar patente..."
+				/>
 			</label>
 			<label class="label">
 				<span>Año</span>
-				<input class="input" type="text" bind:value={formData.año} name="año" placeholder="Ingresar año..." />
+				<input
+					class="input"
+					type="text"
+					bind:value={formData.year}
+					name="año"
+					placeholder="Ingresar año..."
+				/>
 			</label>
 		</form>
 		<!-- prettier-ignore -->
