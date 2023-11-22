@@ -1,1 +1,1 @@
-FRAME_WINDOW = 1
+FRAME_WINDOW = 1        #Buffer por defecto que recive el modelo antes de procesar las imagenes.
