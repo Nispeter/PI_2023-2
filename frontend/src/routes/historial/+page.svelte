@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	import { auth } from '$lib/auth';
 	import { Table } from '@skeletonlabs/skeleton';
 	import type { PageData } from './$types';
@@ -16,17 +15,23 @@
 	import logoutIcon from '$lib/images/logout.svg';
 	import type { DataH, Dueño, Propietario, Lugar } from './type';
 	import axios from 'axios';
+	import AxiosSugar from 'axios-sugar';
 
 	let hi: DataH[] | null = [];
+
+	AxiosSugar.defaults = {
+		repeat: {
+			interval: 5000 //5s
+		}
+	};
 
 	onMount(async () => {
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
 
-		
 		try {
-			const result = await axios.get('http://localhost:8000/horarios')
+			const result = await AxiosSugar.get('http://localhost:8000/horarios');
 			console.log(result);
 			hi = result.data;
 			console.log(hi);
@@ -34,8 +39,7 @@
 			console.error(error);
 			hi = [];
 		}
-
-	});	
+	});
 
 	async function logout() {
 		await auth.logout();
@@ -57,14 +61,13 @@
 		page: 0,
 		limit: 10,
 		size: hi!.length,
-		amounts: [1,2,5,10],
+		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
-	
+
 	$: paginatedSource = hi!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-	
 
 	const goPatentes = () => {
 		goto('/patentes');
@@ -98,8 +101,16 @@
 	</div>
 </div>
 <div class="px-20 py-5">
-	<Table source={{head: ['Número Patente','Fecha'], body: tableMapperValues(paginatedSource, ['licence', 'time'])}} interactive={true}/>
-	<Paginator bind:settings={paginationSettings}
-	showFirstLastButtons="{true}"
-	showPreviousNextButtons="{true}" />
+	<Table
+		source={{
+			head: ['Número Patente', 'Fecha'],
+			body: tableMapperValues(paginatedSource, ['licence', 'time'])
+		}}
+		interactive={true}
+	/>
+	<Paginator
+		bind:settings={paginationSettings}
+		showFirstLastButtons={true}
+		showPreviousNextButtons={true}
+	/>
 </div>
