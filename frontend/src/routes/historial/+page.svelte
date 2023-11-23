@@ -1,9 +1,11 @@
 <script lang="ts">
+
 	import { auth } from '$lib/auth';
 	import { Table } from '@skeletonlabs/skeleton';
 	import type { PageData } from './$types';
 	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
+	import { tableSourceMapper } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { Paginator } from '@skeletonlabs/skeleton';
 	import type { PaginationSettings } from '@skeletonlabs/skeleton';
@@ -12,45 +14,57 @@
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
 	import logoutIcon from '$lib/images/logout.svg';
-	import type { DataH, Dueño, Propietario, Lugar } from './types';
+	import type { DataH, Dueño, Propietario, Lugar } from './type';
 	import axios from 'axios';
 
-	export let H: PageData;
+	let hi: DataH[] | null = [];
 
 	onMount(async () => {
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
-	});
+
+		
+		try {
+			const result = await axios.get('http://localhost:8000/horarios')
+			console.log(result);
+			hi = result.data;
+			console.log(hi);
+		} catch (error) {
+			console.error(error);
+			hi = [];
+		}
+
+	});	
 
 	async function logout() {
 		await auth.logout();
 	}
 
-	async function doGetRequest() {
+	/* async function doGetRequest() {
 
-	const params = H.hi;
+		const params = hi;
 
-	const d: Dueño[] = await axios('http://127.0.0.1:8000/autos/patentes?${params}').then(
-		(res) => res.data
-	)
-	return {
-		d
-	};
-	}
+		const d: Dueño[] = await axios.get(`http://localhost:8000/autos/patentes?${params}`).then(
+			(res) => res.data
+		)
+		return {
+			d
+		};
+	} */
 
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
-		size: H.hi.length,
+		size: hi!.length,
 		amounts: [1,2,5,10],
 	} satisfies PaginationSettings;
 	
-	$: paginatedSource = H.hi.slice(
+	$: paginatedSource = hi!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+	
 
 	const goPatentes = () => {
 		goto('/patentes');
@@ -84,7 +98,7 @@
 	</div>
 </div>
 <div class="px-20 py-5">
-	<Table source={{head: ['Nombre', 'Número Patente', 'Hora', 'Fecha'], body: tableMapperValues(paginatedSource,  ['nombreDueño', 'nPatente', 'Hora', 'Fecha'])}} interactive={true}/>
+	<Table source={{head: ['Número Patente','Fecha'], body: tableMapperValues(paginatedSource, ['licence', 'time'])}} interactive={true}/>
 	<Paginator bind:settings={paginationSettings}
 	showFirstLastButtons="{true}"
 	showPreviousNextButtons="{true}" />

@@ -1,8 +1,8 @@
-export interface Lugar{
+export type Lugar = {
     cam_id: string
 }
 
-export interface Propietario{
+export type Propietario = {
     id: string,
     rut: string,
     nombre: string,
@@ -22,6 +22,6 @@ export interface Dueño{
     id: string,
     patente: string,
     modelo: string,
-    año: 1964,
+    año: string,
     propietario: Propietario
 }
