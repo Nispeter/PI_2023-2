@@ -89,14 +89,14 @@ def detect_license_plate():
                     license_plate_info = {
                         "car_id": car_id,
                         "time": current_time,
-                        "lugar": {
-                            "cam_id": "3",  
-                        },
+                        "lugar": "3",
                         "licence": license_plate_text,
                         "probability": license_plate_text_score
                     }   
                     print(license_plate_info)
                     response_data.append(license_plate_info)
+                    
+
                     check_license_plate(license_plate_text)                 # Se verifica que no sea una patente registrada en la comunidad
                     send_license_plate_data(license_plate_info)             # Se envia el registro de deteccion de patente
 

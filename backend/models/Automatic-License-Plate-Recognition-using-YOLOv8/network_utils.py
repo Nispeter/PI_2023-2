@@ -39,7 +39,7 @@ def isSuspiciousBehaviour(licensePlate):
     response = requests.get(api_endpoint)
     camSet = set()
     for detection in response.json():
-        camSet.add(int(detection['lugar']['cam_id']))
+        camSet.add(int(detection['lugar']))
     if len(camSet) >= 3:
         with ThreadPoolExecutor() as executor:
             executor.submit(send_telegram_async)
