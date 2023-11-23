@@ -6,6 +6,6 @@ from models.lugar import Lugar
 class Horario(BaseModel):
     car_id: int
     time: datetime
-    lugar: dict[str, str] 
+    lugar: str 
     licence: str
     probability: float
