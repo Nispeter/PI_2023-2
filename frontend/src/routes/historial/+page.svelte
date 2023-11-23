@@ -30,15 +30,17 @@
 			goto('/login');
 		}
 
-		try {
-			const result = await AxiosSugar.get('http://localhost:8000/horarios');
-			console.log(result);
-			hi = result.data;
-			console.log(hi);
-		} catch (error) {
-			console.error(error);
-			hi = [];
-		}
+		let myInterval = setInterval(async () => {
+			try {
+				const result = await AxiosSugar.get('http://localhost:8000/horarios');
+				//console.log(result);
+				hi = result.data;
+				//console.log(hi); para verificar el intervalo
+			} catch (error) {
+				console.error(error);
+				hi = [];
+			}		
+		}, 5000); 
 	});
 
 	async function logout() {
