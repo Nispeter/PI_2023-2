@@ -83,9 +83,8 @@ def detect_license_plate():
                 license_plate_text = license_plate_data.get('text', None)
                 license_plate_text_score = license_plate_data.get('text_score', None)
 
-                if license_plate_text:                      # Procesa los fotogramas cuando se alcanza un número específico de ellos.  
+                if license_plate_text:                      # Procesa la placa si fue encontrada alguna
                     current_time = datetime.now().isoformat()
-                    #print("data types: ", type(car_id),type(current_time), type(license_plate_text), type(license_plate_text_score) )
                     license_plate_info = {
                         "car_id": car_id,
                         "time": current_time,
@@ -94,8 +93,10 @@ def detect_license_plate():
                         "probability": license_plate_text_score
                     }   
                     print(license_plate_info)
-                    response_data.append(license_plate_info)
                     
+
+                    response_data.append(license_plate_info)
+
 
                     check_license_plate(license_plate_text)                 # Se verifica que no sea una patente registrada en la comunidad
                     send_license_plate_data(license_plate_info)             # Se envia el registro de deteccion de patente
