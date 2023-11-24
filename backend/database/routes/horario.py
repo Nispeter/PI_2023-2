@@ -75,4 +75,11 @@ async def delete_horario(id: str):#solicitamos el id
         "_id": ObjectId(id)
     })
     return Response(status_code=HTTP_204_NO_CONTENT)
-    
+
+#endpoint para eliminar un horario dado un id
+@horario.delete('/horarios/car_id/{car_id}', status_code=status.HTTP_204_NO_CONTENT, tags=["users"])
+async def delete_horario(car_id: int):#solicitamos el car_id
+    con.test.horario.find_one_and_delete({#usamos find_one_and_delete para borrar el objeto con ese id
+        "car_id": car_id
+    })
+    return Response(status_code=HTTP_204_NO_CONTENT) 
