@@ -25,7 +25,7 @@ async def find_horarios_in_range(licence: str, timestamp: int):
         {
             "licence": licence,
             "time" :{
-                '$gte': (datetime.fromtimestamp(timestamp) - timedelta(minutes=300)),#buscamos un tiempo que sea hace 30min con el time delta
+                '$gte': (datetime.fromtimestamp(timestamp) - timedelta(minutes=30)),#buscamos un tiempo que sea hace 30min con el time delta
                 '$lte': datetime.fromtimestamp(timestamp)
             }
         }
