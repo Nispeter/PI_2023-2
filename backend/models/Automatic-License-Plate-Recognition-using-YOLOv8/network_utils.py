@@ -25,13 +25,28 @@ def send_license_plate_data(data):
     except requests.exceptions.RequestException as err:
         print('Error:', err)
 
-#def update_license_plate_data(data):
-#    api_endpoint = url+
+def update_license_plate_data(data):
+    api_endpoint = url+'/horarios/'+str(data['car_id'])
+    print("UPDATE LICENSE PLATE  " + api_endpoint)
+    headers = {'Content-Type': 'application/json'}
+    try:
+        response = requests.put(api_endpoint, headers=headers, data=json.dumps(data))
+        response.raise_for_status()
+        print('Success:', response.json())
+    except Exception as e:
+        print(f"An error ocurred: {e}")
 
-def delete_license_plate(license_id):
-    api_endpoint = url+'/horarios/car_id/'+str(license_id)
+def print_horarios():
+    global stored_horarios
+    print(stored_horarios)
+
+def delete_license_plate(car_id):
+    api_endpoint = url+'/horarios/car_id/'+str(data['car_id'])
+    
     try:
         response = request.delete(api_endpoint)
+        response.raise_for_status()
+        print('Success:', response.json())
     except Exception as e:
         print(f"An error ocurred: {e}")
     
@@ -49,6 +64,8 @@ def detect_suspicious_behaviour(licensePlate):
     api_endpoint = url+'/horarios/30minuteTimeRange/'+licensePlate+'/'+str(int(datetime.timestamp(datetime.now())))
     try:
         response = requests.get(api_endpoint)
+        response.raise_for_status()
+        print('Success:', response.json())
         camSet = set()
         for detection in response.json():
             camSet.add(int(detection['lugar']))
@@ -132,8 +149,8 @@ def process_known_car_id(detection_data):
     #No estaba antes en BD
     if stored_horarios[car_id][0] in stored_community_plates:
         send_license_plate_data(detection_data)
-    #else:
-        #REALIZAR UPDATE EN ESTE CASO
+    else:
+        update_license_plate_data(detection_data)   
     detect_suspicious_behaviour(license_plate)
     stored_horarios[car_id] = [license_plate, confidence]
 

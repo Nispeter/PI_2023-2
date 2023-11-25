@@ -86,7 +86,7 @@ def detect_license_plate():
                 if license_plate_text:                      # Procesa la placa si fue encontrada alguna
                     current_time = datetime.now().isoformat()
                     license_plate_info = {
-                        "car_id": car_id,
+                        "car_id": int(car_id),
                         "time": current_time,
                         "lugar": "3",
                         "licence": license_plate_text,
@@ -103,4 +103,5 @@ if __name__ == '__main__':
     license_plate_detector = YOLO('license_plate_detector.pt')      # Modelo para detectar placas de matrícula.
     cache_plates()
     cache_horarios()
+    print_horarios()
     app.run(debug=True, port=5000)
