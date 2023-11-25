@@ -25,8 +25,8 @@ def send_license_plate_data(data):
     except requests.exceptions.RequestException as err:
         print('Error:', err)
 
-def update_license_plate_data(data):
-    api_endpoint = url+
+#def update_license_plate_data(data):
+#    api_endpoint = url+
 
 def delete_license_plate(license_id):
     api_endpoint = url+'/horarios/car_id/'+str(license_id)
@@ -75,7 +75,7 @@ def cache_horarios():
         response.raise_for_status()
         horarios = response.json()
         for horario in horarios:
-            stored_horarios[horario['car_id']] = (horario['licence'],horario['probability'])
+            stored_horarios[horario['car_id']] = [horario['licence'],horario['probability']]
     except requests.RequestException as e: 
         print("Error: ",e)
 
@@ -99,7 +99,7 @@ def process_new_car_id(detection_data):
     confidence = detection_data['probability']
     #Se guarda en el cache, se revisa si la placa es de la comunidad
     #en caso de no ser de la comunidad se envia la informacion a la BD y se revisa posible comportamiento sospechoso
-    stored_horarios[car_id] = (license_plate, confidence)
+    stored_horarios[car_id] = [license_plate, confidence]
     if license_plate in stored_plates:
         return
     send_license_plate_data(detection_data)
@@ -107,13 +107,13 @@ def process_new_car_id(detection_data):
     return
 
 
-def process_known_car_id(detectino_data):
+def process_known_car_id(detection_data):
     global stored_plates
     global stored_horarios
     car_id = detection_data['car_id']
     license_plate = detection_data['licence']
     confidence = detection_data['probability']
-    
+
     #si la confianza(probability) cacheada es mayor a la nueva deteccion, detenemos ejecucion(peor prediccion a la guardada)
     if confidence <= stored_horarios[car_id][1]:
         return
@@ -127,7 +127,7 @@ def process_known_car_id(detectino_data):
     if license_plate in stored_plates:
         if stored_horarios[car_id][0] not in stored_plates:
             delete_license_plate(car_id)
-        stored_horarios[car_id] = (license_plate, confidence)
+        stored_horarios[car_id] = [license_plate, confidence]
         return
 
     #No estaba antes en BD
@@ -136,7 +136,7 @@ def process_known_car_id(detectino_data):
     #else:
         #REALIZAR UPDATE EN ESTE CASO
     detect_suspicious_behaviour(license_plate)
-    stored_horarios[car_id] = (license_plate, confidence)
+    stored_horarios[car_id] = [license_plate, confidence]
 
     
 
@@ -149,7 +149,7 @@ def process_detection(detection_data):
     #si el id de deteccion no existe en el cache
     if(car_id not in stored_horarios):
         process_new_car_id(detection_data)
-    process_known_car_id(detection_data):
+    process_known_car_id(detection_data)
 
     
 
