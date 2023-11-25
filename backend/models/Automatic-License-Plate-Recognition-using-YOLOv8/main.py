@@ -103,5 +103,4 @@ if __name__ == '__main__':
     license_plate_detector = YOLO('license_plate_detector.pt')      # Modelo para detectar placas de matrícula.
     cache_plates()
     cache_horarios()
-    print_horarios()
     app.run(debug=True, port=5000)

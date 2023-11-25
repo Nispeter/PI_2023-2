@@ -36,9 +36,6 @@ def update_license_plate_data(data):
     except Exception as e:
         print(f"An error ocurred: {e}")
 
-def print_horarios():
-    global stored_horarios
-    print(stored_horarios)
 
 def delete_license_plate(car_id):
     api_endpoint = url+'/horarios/car_id/'+str(data['car_id'])
