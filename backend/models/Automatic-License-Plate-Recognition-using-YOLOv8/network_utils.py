@@ -80,19 +80,19 @@ def cache_horarios():
         print("Error: ",e)
 
 
-stored_plates = []
+stored_community_plates = []
 def cache_plates():
     #Cachear los datos de placas de vehículos registrados en la comunidad, obtenidos de un endpoint de API, para detectar mas rapidamente.
-    global stored_plates
+    global stored_community_plates
     try:
         response = requests.get(url+'/autos_plates')
         response.raise_for_status()
-        stored_plates = response.json()
+        stored_community_plates = response.json()
     except requests.RequestException as e: 
         print("Error: ",e)
 
 def process_new_car_id(detection_data):
-    global stored_plates
+    global stored_community_plates
     global stored_horarios
     car_id = detection_data['car_id']
     license_plate = detection_data['licence']
@@ -100,15 +100,14 @@ def process_new_car_id(detection_data):
     #Se guarda en el cache, se revisa si la placa es de la comunidad
     #en caso de no ser de la comunidad se envia la informacion a la BD y se revisa posible comportamiento sospechoso
     stored_horarios[car_id] = [license_plate, confidence]
-    if license_plate in stored_plates:
+    if license_plate in stored_community_plates:
         return
     send_license_plate_data(detection_data)
     detect_suspicious_behaviour(license_plate)
-    return
 
 
 def process_known_car_id(detection_data):
-    global stored_plates
+    global stored_community_plates
     global stored_horarios
     car_id = detection_data['car_id']
     license_plate = detection_data['licence']
@@ -124,14 +123,14 @@ def process_known_car_id(detection_data):
         return
 
     #En caso de que la nueva lectura de esta id es parte de la comunidad se elimina el registro de la BD
-    if license_plate in stored_plates:
-        if stored_horarios[car_id][0] not in stored_plates:
+    if license_plate in stored_community_plates:
+        if stored_horarios[car_id][0] not in stored_community_plates:
             delete_license_plate(car_id)
         stored_horarios[car_id] = [license_plate, confidence]
         return
 
     #No estaba antes en BD
-    if stored_horarios[car_id][0] in stored_plates:
+    if stored_horarios[car_id][0] in stored_community_plates:
         send_license_plate_data(detection_data)
     #else:
         #REALIZAR UPDATE EN ESTE CASO
@@ -141,15 +140,13 @@ def process_known_car_id(detection_data):
     
 
 def process_detection(detection_data):
-    global stored_plates
     global stored_horarios
     car_id = detection_data['car_id']
-    license_plate = detection_data['licence']
-    confidence = detection_data['probability']
     #si el id de deteccion no existe en el cache
     if(car_id not in stored_horarios):
         process_new_car_id(detection_data)
-    process_known_car_id(detection_data)
+    else:
+        process_known_car_id(detection_data)
 
     
 
