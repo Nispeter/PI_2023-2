@@ -59,14 +59,14 @@ async def create_horario(horario: Horario):
 
 
 #endpoint para modificar un horario dado su id
-@horario.put('/horarios/{id}')#
-async def update_horario(id: str, horario: Horario):#solicitamos el id y el  nuevo horario
+@horario.put('/horarios/{car_id}')#
+async def update_horario(car_id: int, horario: Horario):#solicitamos el id y el  nuevo horario
     con.test.horario.find_one_and_update({#usamos la funcion find_one_and_update para buscar un horario con el id dado y reemplazar sus datos por los nuevos
-        "_id": ObjectId(id)
+        "car_id": car_id
     }, {
         "$set": dict(horario)
     })
-    return horarioEntity(con.test.horario.find_one({"_id": ObjectId(id)}))
+    return horarioEntity(con.test.horario.find_one({"car_id": car_id}))
 
 #endpoint para eliminar un horario dado un id
 @horario.delete('/horarios/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=["users"])
