@@ -1,4 +1,5 @@
 #Bibliotecas a importar
+import pymongo  
 from fastapi import APIRouter,status,Response,HTTPException
 from passlib.hash import sha256_crypt ##pa los usuarios (preguntar si horario == usuario)
 from bson import ObjectId
@@ -59,14 +60,23 @@ async def create_horario(horario: Horario):
 
 
 #endpoint para modificar un horario dado su id
-@horario.put('/horarios/{car_id}')#
-async def update_horario(car_id: int, horario: Horario):#solicitamos el id y el  nuevo horario
-    con.test.horario.find_one_and_update({#usamos la funcion find_one_and_update para buscar un horario con el id dado y reemplazar sus datos por los nuevos
-        "car_id": car_id
-    }, {
-        "$set": dict(horario)
-    })
-    return horarioEntity(con.test.horario.find_one({"car_id": car_id}))
+@horario.put('/horarios/{car_id}')
+async def update_horario(car_id: int, horario: Horario):
+    # Buscamos y actualizar el horario con el car_id dado
+    result = con.test.horario.find_one_and_update(
+        {"car_id": car_id},
+        {"$set": dict(horario)},
+        return_document=pymongo.ReturnDocument.AFTER  # Devuelve el documento actualizado
+    )
+
+    # Verificamos si el resultado es None (no se encontró un documento con ese car_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Horario no encontrado")
+
+    # Convertir el resultado a una entidad y devolverlo
+    horario_document = horarioEntity(result)
+    return horario_document
+
 
 #endpoint para eliminar un horario dado un id
 @horario.delete('/horarios/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=["users"])
