@@ -93,17 +93,14 @@ def detect_license_plate():
                         "probability": license_plate_text_score
                     }   
                     print(license_plate_info)
-                    
-
+                    process_detection(license_plate_info)
                     response_data.append(license_plate_info)
-
-
-                    check_license_plate(license_plate_text)                 # Se verifica que no sea una patente registrada en la comunidad
-                    send_license_plate_data(license_plate_info)             # Se envia el registro de deteccion de patente
 
     return jsonify(response_data)
 
 if __name__ == '__main__':
     coco_model = YOLO('yolov8n.pt')                                 # Modelo para detectar vehículos.
     license_plate_detector = YOLO('license_plate_detector.pt')      # Modelo para detectar placas de matrícula.
+    cache_plates()
+    cache_horarios()
     app.run(debug=True, port=5000)
