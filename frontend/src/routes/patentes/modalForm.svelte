@@ -1,18 +1,66 @@
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte';
+	import { validateRut } from '@fdograph/rut-utilities';
+	import { createForm } from 'svelte-forms-lib';
+	import * as yup from 'yup';
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import axios from 'axios';
+	import { string } from 'yup';
 	// import { isAuthenticated } from '../../store';
 	// import { get } from 'svelte/store';
 	// import { goto } from '$app/navigation';
 	// import axios, { AxiosError } from 'axios';
+	/*Utilizando createForm de svelte-forms-lib podemos crear una form con distintos
+	handlers, en este caso utilizamos form, que representa los datos de la form,
+	errors que representa los errores en la validacion, handleChange que
+	permite manejar la validacion mientras vaya cambiando el input, handleSubmit
+	que maneja el submit de la form.*/
+	const { form, errors, state, handleChange, handleSubmit } = createForm({
+		/*Indica los valores iniciales de los campos de la form*/
+		initialValues: {
+			modelo: '',
+			rut: '',
+			patente: '',
+			año: ''
+		},
+		/** En esta seccion es donde se validan los valores del*/
+		validate: (values) => {
+			let errs = {};
+			if(values.modelo === ''){
+				errs['modelo'] = 'El modelo es obligatorio.';
+			}
+			if (validateRut(values.rut) == false) {
+				errs['rut'] = 'Rut invalido.';
+			}
+			if (values.año != undefined) {
+				if (values.año.length > 4 || values.año.length < 4) {
+					errs['año'] = 'Año invalido.';
+				}
+			}
+			if (values.patente != undefined) {
+				if (
+					values.patente.length < 7 ||
+					values.patente.length > 7 ||
+					(values.patente.length == 7 && values.patente[4] != '-')
+				) {
+					errs['patente'] = 'Patente invalida';
+				}
+			}
+			return errs;
+		},
+		onSubmit: (values) => {
+			console.log(values)
+			onFormSubmit(values);
+		}
+	});
 
 	type postData = {
 		modelo: string;
 		rut: string;
 		patente: string;
-		year: string;
+		año: string;
 	};
 	// Props
 	/** Exposes parent props to this component. */
@@ -25,7 +73,7 @@
 		modelo: 'Subaru',
 		rut: '11.111.111-1',
 		patente: 'ABCD-11',
-		year: '2023'
+		año: '2023'
 	};
 	// onMount(async ()=> {
 	// 	if(!get(isAuthenticated)){
@@ -35,7 +83,9 @@
 	// })
 
 	// We've created a custom submit function to pass the response and close the modal.
-	function onFormSubmit() {
+	//Para validacion esta funcion va dentro del onSubmit.
+	async function onFormSubmit(values : postData) {
+		//console.log(validateRut(formData.rut));
 		if ($modalStore[0].response) {
 			/**
 			  esto devuelve la form data como respuesta del modal
@@ -44,8 +94,16 @@
 			https://www.skeleton.dev/utilities/modals#async-response			  
 
 			 **/
-
-			$modalStore[0].response(formData);
+			try {
+				const response = await axios.post('http://127.0.0.1:8000/autos', values);
+				$modalStore[0].response({response: true});
+				console.log('a');
+			} catch (e) {
+				if (axios.isAxiosError(e)) {
+					console.log(e.response);
+					$modalStore[0].response({response: false});
+				}
+			}
 		}
 		// cerrar el modal
 		modalStore.close();
@@ -75,46 +133,63 @@
 				<input
 					class="input"
 					type="text"
-					bind:value={formData.modelo}
+					on:change={handleChange}
+					bind:value={$form.modelo}
 					name="modelo"
-					placeholder="Ingresar nombre..."
+					placeholder="Ingresar modelo..."
 				/>
+				{#if $errors.modelo}
+					<small>{$errors.modelo}</small>
+				{/if}
 			</label>
 			<label class="label">
 				<span>RUT</span>
 				<input
 					class="input"
 					type="text"
-					bind:value={formData.rut}
+					on:change={handleChange}
+					bind:value={$form.rut}
 					name="rut"
 					placeholder="Ingresar rut..."
 				/>
+				{#if $errors.rut}
+					<small class="text-red-500 italic">{$errors.rut}</small>
+				{/if}
 			</label>
 			<label class="label">
 				<span>Patente</span>
 				<input
 					class="input"
 					type="text"
-					bind:value={formData.patente}
+					on:change={handleChange}
+					bind:value={$form.patente}
 					name="patente"
 					placeholder="Ingresar patente..."
 				/>
+				{#if $errors.patente}
+					<small>{$errors.patente}</small>
+				{/if}
 			</label>
 			<label class="label">
 				<span>Año</span>
 				<input
 					class="input"
 					type="text"
-					bind:value={formData.year}
+					on:change={handleChange}
+					bind:value={$form.año}
 					name="año"
 					placeholder="Ingresar año..."
 				/>
+				{#if $errors.año}
+					<small>{$errors.año}</small>
+				{/if}
 			</label>
 		</form>
 		<!-- prettier-ignore -->
 		<footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Submit Form</button>
+        <button class="btn {parent.buttonPositive}" on:click={handleSubmit}>Submit Form</button>
+        <!-- <button class="btn {parent.buttonPositive}" type="submit">Submit Form</button> -->
     </footer>
 	</div>
 {/if}

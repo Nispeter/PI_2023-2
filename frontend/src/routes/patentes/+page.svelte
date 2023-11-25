@@ -14,6 +14,7 @@
 	import { Modal, getModalStore, initializeStores } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
 	import modalForm from './modalForm.svelte';
+	import axios from 'axios';
 
 	initializeStores();
 
@@ -25,20 +26,6 @@
 		modalComponent: { ref: modalForm }
 	};
 
-	const modal: ModalSettings = {
-		title: 'Ingresar registro.',
-		body: 'Rellene el formulario.',
-		type: 'component',
-		component: 'modalComponent',
-		response(r) {
-			/**
-			puedes definir aqui el post pero esta debe ser una funcion asyncrona  
-			de definir el post dentro de modalForm entonces debes seguir esto
-			https://www.skeleton.dev/utilities/modals#async-response
-			**/
-			console.log(r);
-		}
-	};
 	// modalStore.trigger(modal);
 	if ($modalStore[0]) console.log($modalStore[0].title);
 
@@ -58,14 +45,55 @@
 		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
 
-	$: paginatedSource = data.allCars.slice(
+	$: paginatedSource = data.allCars!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 	let modalFlag: boolean = false;
 	function triggerModal() {
-		modalFlag = true;
-		modalStore.trigger(modal);
+		new Promise<boolean>((resolve) => {
+			const modal: ModalSettings = {
+				title: 'Ingresar registro.',
+				body: 'Rellene el formulario.',
+				type: 'component',
+				component: 'modalComponent',
+				response: (r: boolean) => {
+					/**
+					puedes definir aqui el post pero esta debe ser una funcion asyncrona  
+					de definir el post dentro de modalForm entonces debes seguir esto
+					https://www.skeleton.dev/utilities/modals#async-response
+					**/
+					resolve(r);
+				}
+			};
+			modalStore.trigger(modal);
+			modalFlag = true;
+		}).then(async (r: any) => {
+			//PReguntar por error => triggerear modal.
+			if (r.response == false) {
+				const modal: ModalSettings = {
+					type: 'alert',
+					// Data
+					title: 'Error al registrar.',
+					body: 'Algo ha salido mal. Verifique los campos, si este error persiste contactar con soporte.',
+				};
+				modalStore.trigger(modal);
+			}
+			else if(r.response == true){
+				console.log("Updating...")
+				data.allCars = await axios.get('http://127.0.0.1:8000/autos').then((res) => res.data);
+				console.log("Updated")
+				const modal: ModalSettings = {
+					type: 'alert',
+					// Data
+					title: 'Registro exitoso.',
+					body: 'Se ha logrado registrar el vehículo con éxito.',
+				};
+				modalStore.trigger(modal);
+			}
+			//Trigger modal de exito.
+			console.log('resolved response', r);
+		});
 	}
 
 	// const tableSimple : TableSource = {
