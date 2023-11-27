@@ -135,7 +135,7 @@
 		<Table
 			source={{
 				head: ['PATENTE', 'MODELO', 'AÑO'],
-				body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'año'])
+				body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'ano'])
 			}}
 			interactive={true}
 		/>

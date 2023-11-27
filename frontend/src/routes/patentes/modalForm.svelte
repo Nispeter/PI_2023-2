@@ -21,7 +21,7 @@
 			modelo: '',
 			rut: '',
 			patente: '',
-			año: ''
+			ano: ''
 		},
 		/** En esta seccion es donde se validan los valores del*/
 		validate: (values: any) => {
@@ -162,7 +162,7 @@
 					class="input"
 					type="text"
 					on:change={handleChange}
-					bind:value={$form.año}
+					bind:value={$form.ano}
 					name="año"
 					placeholder="Ingresar año..."
 				/>
