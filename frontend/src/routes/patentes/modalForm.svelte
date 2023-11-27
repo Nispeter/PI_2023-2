@@ -1,17 +1,15 @@
 <script lang="ts">
-	import type { SvelteComponent } from 'svelte';
-	import { validateRut } from '@fdograph/rut-utilities';
 	import { createForm } from 'svelte-forms-lib';
-	import * as yup from 'yup';
+	import { onMount, type SvelteComponent } from 'svelte';
+	import { validateRut } from '@fdograph/rut-utilities';
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { isAuthenticated } from '../../store';
+	import { get } from 'svelte/store';
+	import { goto } from '$app/navigation';
 	import axios from 'axios';
-	import { string } from 'yup';
-	// import { isAuthenticated } from '../../store';
-	// import { get } from 'svelte/store';
-	// import { goto } from '$app/navigation';
-	// import axios, { AxiosError } from 'axios';
+
 	/*Utilizando createForm de svelte-forms-lib podemos crear una form con distintos
 	handlers, en este caso utilizamos form, que representa los datos de la form,
 	errors que representa los errores en la validacion, handleChange que
@@ -26,9 +24,14 @@
 			año: ''
 		},
 		/** En esta seccion es donde se validan los valores del*/
-		validate: (values) => {
-			let errs = {};
-			if(values.modelo === ''){
+		validate: (values: any) => {
+			let errs: {
+				modelo: string | null;
+				rut: string | null;
+				ano: string | null;
+				patente: string | null;
+			} = { modelo: '', rut: '', ano: '', patente: '' };
+			if (values.modelo === '') {
 				errs['modelo'] = 'El modelo es obligatorio.';
 			}
 			if (validateRut(values.rut) == false) {
@@ -36,22 +39,18 @@
 			}
 			if (values.año != undefined) {
 				if (values.año.length > 4 || values.año.length < 4) {
-					errs['año'] = 'Año invalido.';
+					errs['ano'] = 'Año invalido.';
 				}
 			}
 			if (values.patente != undefined) {
-				if (
-					values.patente.length < 7 ||
-					values.patente.length > 7 ||
-					(values.patente.length == 7 && values.patente[4] != '-')
-				) {
+				if (values.patente.length < 7 || values.patente.length > 7) {
 					errs['patente'] = 'Patente invalida';
 				}
 			}
 			return errs;
 		},
-		onSubmit: (values) => {
-			console.log(values)
+		onSubmit: (values: any) => {
+			console.log(values);
 			onFormSubmit(values);
 		}
 	});
@@ -68,23 +67,15 @@
 
 	const modalStore = getModalStore();
 
-	// Form Data
-	const formData: postData = {
-		modelo: 'Subaru',
-		rut: '11.111.111-1',
-		patente: 'ABCD-11',
-		año: '2023'
-	};
-	// onMount(async ()=> {
-	// 	if(!get(isAuthenticated)){
-	// 		console.log("a")
-	// 		goto("/login")
-	// 	}
-	// })
+	onMount(async () => {
+		if (!get(isAuthenticated)) {
+			goto('/login');
+		}
+	});
 
 	// We've created a custom submit function to pass the response and close the modal.
 	//Para validacion esta funcion va dentro del onSubmit.
-	async function onFormSubmit(values : postData) {
+	async function onFormSubmit(values: postData) {
 		//console.log(validateRut(formData.rut));
 		if ($modalStore[0].response) {
 			/**
@@ -96,23 +87,18 @@
 			 **/
 			try {
 				const response = await axios.post('http://127.0.0.1:8000/autos', values);
-				$modalStore[0].response({response: true});
+				$modalStore[0].response({ response: true });
 				console.log('a');
 			} catch (e) {
 				if (axios.isAxiosError(e)) {
 					console.log(e.response);
-					$modalStore[0].response({response: false});
+					$modalStore[0].response({ response: false });
 				}
 			}
 		}
 		// cerrar el modal
 		modalStore.close();
 	}
-	// function FormSubmit():void{
-	// 	if($modalStore[0].response){
-	// 		dispatch('formData', formData);
-	// 	}
-	// }
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
