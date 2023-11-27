@@ -11,3 +11,11 @@ export interface ManyPokemon{
     previous: string
     results: Pokemon[]
 }
+
+export interface Car{
+    id: number,
+    patent: string,
+    model: string,
+    year: number,
+    
+}
