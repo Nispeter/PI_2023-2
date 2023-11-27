@@ -75,19 +75,18 @@
 					type: 'alert',
 					// Data
 					title: 'Error al registrar.',
-					body: 'Algo ha salido mal. Verifique los campos, si este error persiste contactar con soporte.',
+					body: 'Algo ha salido mal. Verifique los campos, si este error persiste contactar con soporte.'
 				};
 				modalStore.trigger(modal);
-			}
-			else if(r.response == true){
-				console.log("Updating...")
+			} else if (r.response == true) {
+				console.log('Updating...');
 				data.allCars = await axios.get('http://127.0.0.1:8000/autos').then((res) => res.data);
-				console.log("Updated")
+				console.log('Updated');
 				const modal: ModalSettings = {
 					type: 'alert',
 					// Data
 					title: 'Registro exitoso.',
-					body: 'Se ha logrado registrar el vehículo con éxito.',
+					body: 'Se ha logrado registrar el vehículo con éxito.'
 				};
 				modalStore.trigger(modal);
 			}

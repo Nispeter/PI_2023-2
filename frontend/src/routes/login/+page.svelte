@@ -7,28 +7,17 @@
 
 	onMount(async () => {
 		await auth.createClient();
-
-		await auth.loginWithPopup();
-
-
 		if (get(isAuthenticated)) {
 			return goto('/historial');
+		} else {
+			await auth.loginWithPopup();
+			if (get(isAuthenticated)) return goto('/historial');
 		}
-
 	});
-
-	async function login() {
-	}
-
-	function logout() {
-		auth.logout();
-	}
 </script>
 
 <svelte:head>
-	<title>
-		Login
-	</title>
+	<title>Login</title>
 </svelte:head>
 <!-- <section>
 	<div class="flex h-screen items-center">

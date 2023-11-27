@@ -1,64 +1,93 @@
 <script lang="ts">
 	import { auth } from '$lib/auth';
 	import { Table } from '@skeletonlabs/skeleton';
+	import type { PageData } from './$types';
 	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
+	import { tableSourceMapper } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
+	import { Paginator } from '@skeletonlabs/skeleton';
+	import type { PaginationSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
-	import logoutIcon from "$lib/images/logout.svg"
+	import logoutIcon from '$lib/images/logout.svg';
+	import type { DataH, Dueño, Propietario, Lugar } from './type';
+	import axios from 'axios';
+	import AxiosSugar from 'axios-sugar';
+
+	let hi: DataH[] | null = [];
+
+	AxiosSugar.defaults = {
+		repeat: {
+			interval: 5000 //5s
+		}
+	};
 
 	onMount(async () => {
-		await auth.createClient();
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
+
+		let myInterval = setInterval(async () => {
+			try {
+				const result = await AxiosSugar.get('http://localhost:8000/horarios');
+				//console.log(result);
+				hi = result.data;
+				//console.log(hi); para verificar el intervalo
+			} catch (error) {
+				console.error(error);
+				hi = [];
+			}		
+		}, 5000); 
 	});
 
 	async function logout() {
 		await auth.logout();
 	}
-	const sourceData = [
-		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '20:15', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Maria Espinoza', nPatente: 'MR LX 88', Hora: '20:07', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Francisca Fuentes', nPatente: 'WC BM 72', Hora: '19:48', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Fernando Reyes', nPatente: 'LD MN 96', Hora: '19:32', Fecha: '05/10/2023' },
-		{ nombreDueño: 'José Zapata', nPatente: 'FN KK 56', Hora: '15:22', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Marco Aguirre', nPatente: 'MH GH 80', Hora: '15:03', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Luis Bello', nPatente: 'RH ZX 64', Hora: '08:15', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Isabel Gonzales', nPatente: 'KV BM 77', Hora: '08:11', Fecha: '05/10/2023' },
-		{ nombreDueño: 'Paola Rojas', nPatente: 'KL FM 59', Hora: '22:50', Fecha: '04/10/2023' },
-		{ nombreDueño: 'Maria Ignacia Rosas', nPatente: 'HN MN 61', Hora: '20:30', Fecha: '04/10/2023' }
-	];
 
-	const tableSimple: TableSource = {
-		head: ['Nombre', 'Número Patente', 'Hora', 'Fecha'],
-		body: tableMapperValues(sourceData, ['nombreDueño', 'nPatente', 'Hora', 'Fecha']),
-		meta: tableMapperValues(sourceData, ['nombreDueño', 'nPatente', 'Hora', 'Fecha'])
+	/* async function doGetRequest() {
+
+		const params = hi;
+
+		const d: Dueño[] = await axios.get(`http://localhost:8000/autos/patentes?${params}`).then(
+			(res) => res.data
+		)
+		return {
+			d
+		};
+	} */
+
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: hi!.length,
+		amounts: [1, 2, 5, 10]
+	} satisfies PaginationSettings;
+
+	$: paginatedSource = hi!.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+
+	const goPatentes = () => {
+		goto('/patentes');
 	};
-
-	const goPatentes= () => {
-		goto("/patentes");
-	}
 </script>
+
 <svelte:head>
-	<title>
-		Historial
-	</title>
+	<title>Historial</title>
 </svelte:head>
 
 <AppBar slotTrail="place-content-end">
 	<h1 class="h1" data-toc-ignore>Historial de avistamiento de vehiculos</h1>
-	<h3 class="h3" data-toc-ignore>
-		Bienvenidos a su aplicacion de reconocimiento de vehiculos
-	</h3>
+	<h3 class="h3" data-toc-ignore>Bienvenidos a su aplicacion de reconocimiento de vehiculos</h3>
 
 	<svelte:fragment slot="trail">
 		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
 			<picture>
-				<img src="{logoutIcon}" alt="salir" width="20" height="20">
+				<img src={logoutIcon} alt="salir" width="20" height="20" />
 			</picture>
 		</button>
 	</svelte:fragment>
@@ -67,10 +96,23 @@
 <div class="w-full p-10">
 	<div class="flex justify-end">
 		<div>
-			<button type="button" class="btn variant-filled" on:click={goPatentes}>Administrar Base de Datos</button>
+			<button type="button" class="btn variant-filled" on:click={goPatentes}
+				>Administrar Base de Datos</button
+			>
 		</div>
 	</div>
 </div>
 <div class="px-20 py-5">
-	<Table source={tableSimple} />
+	<Table
+		source={{
+			head: ['Número Patente', 'Fecha'],
+			body: tableMapperValues(paginatedSource, ['licence', 'time'])
+		}}
+		interactive={true}
+	/>
+	<Paginator
+		bind:settings={paginationSettings}
+		showFirstLastButtons={true}
+		showPreviousNextButtons={true}
+	/>
 </div>
