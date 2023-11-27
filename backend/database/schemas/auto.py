@@ -4,7 +4,7 @@ def autoEntity(item) -> dict:
         "id": str(item["_id"]),        # Convierte el ObjectId a una cadena
         "patente": item["patente"],    # Obtiene la patente del auto
         "modelo": item["modelo"],      # Obtiene el modelo del auto
-        "año": item["año"],            # Obtiene el año del auto
+        "ano": item["ano"],            # Obtiene el año del auto
         "propietario": item["propietario"]  # Obtiene la información del propietario del auto
     }
 
