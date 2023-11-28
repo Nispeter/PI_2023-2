@@ -5,7 +5,7 @@ def autoEntity(item) -> dict:
         "patente": item["patente"],    # Obtiene la patente del auto
         "modelo": item["modelo"],      # Obtiene el modelo del auto
         "ano": item["ano"],            # Obtiene el año del auto
-        "propietario": item["propietario"]  # Obtiene la información del propietario del auto
+        "rut": item["rut"]  # Obtiene la información del propietario del auto
     }
 
 def autosEntity(entity) -> list:
