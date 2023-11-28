@@ -17,7 +17,7 @@
 	permite manejar la validacion mientras vaya cambiando el input, handleSubmit
 	que maneja el submit de la form.*/
 	let nowDate = new Date();
-	const maxYear = nowDate.getMonth() >= 9 ? nowDate.getFullYear() + 1 : nowDate.getFullYear();
+	const maxYear = nowDate.getMonth() >= 9 ? nowDate.getFullYear() + 2 : nowDate.getFullYear() + 1;
 	const { form, errors, state, handleChange, handleSubmit } = createForm({
 		/*Indica los valores iniciales de los campos de la form*/
 		initialValues: {
