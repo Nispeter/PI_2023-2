@@ -76,7 +76,8 @@
 					type: 'alert',
 					// Data
 					title: 'Error al registrar.',
-					body: 'Algo ha salido mal. Verifique los campos, si este error persiste contactar con soporte.'
+					body: 'Algo ha salido mal. Verifique los campos, si este error persiste contactar con soporte.',
+					buttonTextCancel: 'Aceptar'
 				};
 				modalStore.trigger(modal);
 			} else if (r.response == true) {
@@ -87,7 +88,8 @@
 					type: 'alert',
 					// Data
 					title: 'Registro exitoso.',
-					body: 'Se ha logrado registrar el vehículo con éxito.'
+					body: 'Se ha logrado registrar el vehículo con éxito.',
+					buttonTextCancel: 'Aceptar'
 				};
 				modalStore.trigger(modal);
 			}
