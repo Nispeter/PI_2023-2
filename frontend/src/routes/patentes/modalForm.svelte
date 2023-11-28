@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createForm } from 'svelte-forms-lib';
-	import { getContext, onMount, type SvelteComponent } from 'svelte';
+	import { onMount, type SvelteComponent } from 'svelte';
 	import { validateRut, formatRut, RutFormat } from '@fdograph/rut-utilities';
 	import * as yup from 'yup';
 
