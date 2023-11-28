@@ -16,6 +16,12 @@
 	import modalForm from './modalForm.svelte';
 	import axios from 'axios';
 
+	onMount(async () => {
+		if (!get(isAuthenticated)) {
+			goto('/login');
+		}
+	});
+
 	initializeStores();
 
 	export let data: PageData;
@@ -28,12 +34,6 @@
 
 	// modalStore.trigger(modal);
 	if ($modalStore[0]) console.log($modalStore[0].title);
-
-	onMount(async () => {
-		if (!get(isAuthenticated)) {
-			goto('/login');
-		}
-	});
 
 	async function logout() {
 		await auth.logout();
@@ -123,7 +123,9 @@
 	</svelte:fragment>
 
 	<svelte:fragment slot="trail">
-		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
+		<button type="button" class="btn variant-filled-primary" on:click={logout}>
+			<span class="text-white">Cerrar Sesion</span>
+
 			<picture>
 				<img src={logoutIcon} alt="salir" width="20" height="20" />
 			</picture>
@@ -151,11 +153,12 @@
 		<button
 			type="button"
 			on:click={triggerModal}
-			class="btn-icon variant-filled-primary justify-self-end"
+			class="btn variant-filled-primary justify-self-end"
 		>
 			<picture>
 				<img src={plusIcon} alt="salir" width="20" height="20" />
 			</picture>
+			<span>Agregar Residente</span>
 		</button>
 	</div>
 </section>

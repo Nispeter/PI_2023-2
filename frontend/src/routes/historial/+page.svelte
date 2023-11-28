@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { auth } from '$lib/auth';
 	import { Table } from '@skeletonlabs/skeleton';
-	import type { PageData } from './$types';
-	import type { TableSource } from '@skeletonlabs/skeleton';
 	import { tableMapperValues } from '@skeletonlabs/skeleton';
-	import { tableSourceMapper } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { Paginator } from '@skeletonlabs/skeleton';
 	import type { PaginationSettings } from '@skeletonlabs/skeleton';
@@ -13,17 +10,10 @@
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
 	import logoutIcon from '$lib/images/logout.svg';
-	import type { DataH, Dueño, Propietario, Lugar } from './type';
-	import axios from 'axios';
+	import type { DataH } from './type';
 	import AxiosSugar from 'axios-sugar';
 
 	let hi: DataH[] | null = [];
-
-	AxiosSugar.defaults = {
-		repeat: {
-			interval: 5000 //5s
-		}
-	};
 
 	onMount(async () => {
 		if (!get(isAuthenticated)) {
@@ -32,32 +22,31 @@
 
 		let myInterval = setInterval(async () => {
 			try {
-				const result = await AxiosSugar.get('http://localhost:8000/horarios');
+				const result = await AxiosSugar.get(
+					'http://localhost:8000/horarios',
+					{},
+					{
+						repeat: {
+							interval: 1000
+						}
+					}
+				);
 				//console.log(result);
 				hi = result.data;
+				hi?.forEach((values) => {
+					const date = new Date(values.time);
+					values.time = date.toLocaleDateString();
+				});
 				//console.log(hi); para verificar el intervalo
 			} catch (error) {
 				console.error(error);
-				hi = [];
-			}		
-		}, 5000); 
+			}
+		}, 5000);
 	});
 
 	async function logout() {
 		await auth.logout();
 	}
-
-	/* async function doGetRequest() {
-
-		const params = hi;
-
-		const d: Dueño[] = await axios.get(`http://localhost:8000/autos/patentes?${params}`).then(
-			(res) => res.data
-		)
-		return {
-			d
-		};
-	} */
 
 	let paginationSettings = {
 		page: 0,
@@ -85,7 +74,8 @@
 	<h3 class="h3" data-toc-ignore>Bienvenidos a su aplicacion de reconocimiento de vehiculos</h3>
 
 	<svelte:fragment slot="trail">
-		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
+		<button type="button" class="btn variant-filled-primary" on:click={logout}>
+			<span class="text-white">Cerrar Sesion</span>
 			<picture>
 				<img src={logoutIcon} alt="salir" width="20" height="20" />
 			</picture>
@@ -97,7 +87,7 @@
 	<div class="flex justify-end">
 		<div>
 			<button type="button" class="btn variant-filled" on:click={goPatentes}
-				>Administrar Base de Datos</button
+				>Administrar Residente</button
 			>
 		</div>
 	</div>
@@ -105,8 +95,8 @@
 <div class="px-20 py-5">
 	<Table
 		source={{
-			head: ['Número Patente', 'Fecha'],
-			body: tableMapperValues(paginatedSource, ['licence', 'time'])
+			head: ['Número Patente', 'Fecha', 'Camara'],
+			body: tableMapperValues(paginatedSource, ['licence', 'time', 'lugar'])
 		}}
 		interactive={true}
 	/>
