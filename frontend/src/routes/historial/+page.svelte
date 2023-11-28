@@ -35,7 +35,7 @@
 				hi = result.data;
 				hi?.forEach((values) => {
 					const date = new Date(values.time);
-					values.time = date.toLocaleDateString();
+					values.time = date.toLocaleString();
 				});
 				//console.log(hi); para verificar el intervalo
 			} catch (error) {
