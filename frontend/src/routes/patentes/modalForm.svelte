@@ -58,7 +58,6 @@
 				.string()
 				.ensure()
 				.required('Debe ingresar una patente')
-				.length(6, `Debe tener largo ${length}`)
 				.matches(
 					/([A-Za-z]{4}[0-9]{2}|[a-zA-Z]{2}[0-9]{4})/,
 					'Debe Tener formato de patente Chilena'
