@@ -17,6 +17,7 @@
 	import axios from 'axios';
 
 	onMount(async () => {
+		await auth.createClient();
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
@@ -136,8 +137,8 @@
 	<div class="p-20">
 		<Table
 			source={{
-				head: ['PATENTE', 'MODELO', 'AÑO'],
-				body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'ano'])
+				head: ['PATENTE', 'MODELO', 'AÑO', 'RUT'],
+				body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'ano', 'rut'])
 			}}
 			interactive={true}
 		/>

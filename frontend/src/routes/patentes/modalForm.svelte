@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { createForm } from 'svelte-forms-lib';
-	import { onMount, type SvelteComponent } from 'svelte';
-	import { validateRut } from '@fdograph/rut-utilities';
+	import { getContext, onMount, type SvelteComponent } from 'svelte';
+	import { validateRut, formatRut, RutFormat } from '@fdograph/rut-utilities';
+	import * as yup from 'yup';
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -15,40 +16,74 @@
 	errors que representa los errores en la validacion, handleChange que
 	permite manejar la validacion mientras vaya cambiando el input, handleSubmit
 	que maneja el submit de la form.*/
+	let nowDate = new Date();
+	const maxYear = nowDate.getMonth() >= 9 ? nowDate.getFullYear() + 1 : nowDate.getFullYear();
 	const { form, errors, state, handleChange, handleSubmit } = createForm({
 		/*Indica los valores iniciales de los campos de la form*/
 		initialValues: {
 			modelo: '',
 			rut: '',
 			patente: '',
-			ano: ''
+			ano: maxYear
 		},
 		/** En esta seccion es donde se validan los valores del*/
-		validate: (values: any) => {
-			let errs: {
-				modelo: string | null;
-				rut: string | null;
-				ano: string | null;
-				patente: string | null;
-			} = { modelo: '', rut: '', ano: '', patente: '' };
-			if (values.modelo === '') {
-				errs['modelo'] = 'El modelo es obligatorio.';
-			}
-			if (validateRut(values.rut) == false) {
-				errs['rut'] = 'Rut invalido.';
-			}
-			if (values.año != undefined) {
-				if (values.año.length > 4 || values.año.length < 4) {
-					errs['ano'] = 'Año invalido.';
-				}
-			}
-			if (values.patente != undefined) {
-				if (values.patente.length < 7 || values.patente.length > 7) {
-					errs['patente'] = 'Patente invalida';
-				}
-			}
-			return errs;
-		},
+		// validate: (values: any) => {
+		// 	let errs: {
+		// 		modelo: string | null;
+		// 		rut: string | null;
+		// 		ano: string | null;
+		// 		patente: string | null;
+		// 	} = { modelo: '', rut: '', ano: '', patente: '' };
+		// 	if (values.modelo === '') {
+		// 		errs['modelo'] = 'El modelo es obligatorio.';
+		// 	}
+		// 	if (validateRut(values.rut) == false) {
+		// 		values.rut = formatRut(values.rut);
+		// 		errs['rut'] = 'Rut invalido.';
+		// 	}
+		// 	if (values.año != undefined) {
+		// 		if (values.año.length > 4 || values.año.length < 4) {
+		// 			errs['ano'] = 'Año invalido.';
+		// 		}
+		// 	}
+		// 	if (values.patente != undefined) {
+		// 		if (values.patente.length < 7 || values.patente.length > 7) {
+		// 			errs['patente'] = 'Patente invalida';
+		// 		}
+		// 	}
+		// 	return errs;
+		// },
+		validationSchema: yup.object().shape({
+			patente: yup
+				.string()
+				.ensure()
+				.required('Debe ingresar una patente')
+				.length(6, `Debe tener largo ${length}`)
+				.matches(
+					/([A-Za-z]{4}[0-9]{2}|[a-zA-Z]{2}[0-9]{4})/,
+					'Debe Tener formato de patente Chilena'
+				),
+			modelo: yup.string().required('Debe Ingresar un Modelo de Vehiculo'),
+			ano: yup
+				.number()
+				.required('Debe Ingresar un año')
+				.moreThan(1900, 'Debe ser mayor a 1900')
+				.lessThan(maxYear, `Debe ser manor a ${maxYear}`),
+			rut: yup
+				.string()
+				.ensure()
+				.required('Debe Ingresar un rut')
+				.test({
+					name: 'validate rut',
+					message: 'Formato de rut incorrecto',
+					test: (value: string) => {
+						return validateRut(formatRut(value, RutFormat.DOTS_DASH));
+					}
+				})
+				.transform((value, originalValue) => {
+					return formatRut(value, RutFormat.DOTS_DASH);
+				})
+		}),
 		onSubmit: (values: any) => {
 			console.log(values);
 			onFormSubmit(values);
@@ -117,7 +152,7 @@
 			<label class="label">
 				<span>Modelo</span>
 				<input
-					class="input"
+					class="input {$errors.modelo.length ? 'input-error' : ''}"
 					type="text"
 					on:change={handleChange}
 					bind:value={$form.modelo}
@@ -125,13 +160,13 @@
 					placeholder="Ingresar modelo..."
 				/>
 				{#if $errors.modelo}
-					<small>{$errors.modelo}</small>
+					<small class="text-red-500 italic">{$errors.modelo}</small>
 				{/if}
 			</label>
 			<label class="label">
 				<span>RUT</span>
 				<input
-					class="input"
+					class="input {$errors.rut.length ? 'input-error' : ''}"
 					type="text"
 					on:change={handleChange}
 					bind:value={$form.rut}
@@ -145,7 +180,7 @@
 			<label class="label">
 				<span>Patente</span>
 				<input
-					class="input"
+					class="input {$errors.patente.length ? 'input-error' : ''}"
 					type="text"
 					on:change={handleChange}
 					bind:value={$form.patente}
@@ -153,21 +188,21 @@
 					placeholder="Ingresar patente..."
 				/>
 				{#if $errors.patente}
-					<small>{$errors.patente}</small>
+					<small class="text-red-500 italic">{$errors.patente}</small>
 				{/if}
 			</label>
 			<label class="label">
 				<span>Año</span>
 				<input
-					class="input"
+					class="input {$errors.ano.length ? 'input-error' : ''}"
 					type="text"
 					on:change={handleChange}
 					bind:value={$form.ano}
 					name="año"
 					placeholder="Ingresar año..."
 				/>
-				{#if $errors.año}
-					<small>{$errors.año}</small>
+				{#if $errors.ano}
+					<small class="text-red-500 italic">{$errors.ano}</small>
 				{/if}
 			</label>
 		</form>

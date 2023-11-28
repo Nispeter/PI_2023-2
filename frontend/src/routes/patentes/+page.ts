@@ -1,4 +1,4 @@
-import type { Car, ManyPokemon } from './types';
+import type { Car } from './types';
 import axios from 'axios';
 
 export const load = (async () => {

@@ -4,16 +4,17 @@ import { authClient, isAuthenticated, popUpOpen, user } from '../store';
 import { get } from 'svelte/store';
 
 async function createClient() {
-	authClient.set(
-		await createAuth0Client({
-			domain: ENV.auth0.domain,
-			clientId: ENV.auth0.id,
-			authorizationParams: {
-				redirect_uri: ENV.auth0.callback,
-				scope: "openid profile email"
-			}
-		})
-	);
+	if(!get(authClient))
+		authClient.set(
+			await createAuth0Client({
+				domain: ENV.auth0.domain,
+				clientId: ENV.auth0.id,
+				authorizationParams: {
+					redirect_uri: ENV.auth0.callback,
+					scope: "openid profile email"
+				}
+			})
+		);
 
 	isAuthenticated.set(await get(authClient).isAuthenticated());
 	user.set((await get(authClient).getUser()) ?? {});
