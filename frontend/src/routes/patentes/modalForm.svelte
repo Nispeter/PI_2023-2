@@ -24,7 +24,7 @@
 			modelo: '',
 			rut: '',
 			patente: '',
-			ano: maxYear
+			ano: maxYear - 1
 		},
 		/** En esta seccion es donde se validan los valores del*/
 		// validate: (values: any) => {
@@ -68,7 +68,7 @@
 				.number()
 				.required('Debe Ingresar un año')
 				.moreThan(1900, 'Debe ser mayor a 1900')
-				.lessThan(maxYear, `Debe ser manor a ${maxYear}`),
+				.lessThan(maxYear, `Debe ser manor o igual ${maxYear - 1}`),
 			rut: yup
 				.string()
 				.ensure()
