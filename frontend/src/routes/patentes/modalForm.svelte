@@ -53,6 +53,9 @@
 		// 	}
 		// 	return errs;
 		// },
+		/**En esta seccion se realiza la validacion utilizando yup para cada uno de los campos
+		 * del form.
+		*/
 		validationSchema: yup.object().shape({
 			patente: yup
 				.string()
@@ -83,12 +86,18 @@
 					return formatRut(value, RutFormat.DOTS_DASH);
 				})
 		}),
+		/**Esta funcion se ejecuta al momento de enviar la form con handleSubmit, entrega los valores de la form
+		 * a la funcion que se encarga de hacer el post y enviar una response del modal para manejar el update de
+		 * la data.
+		*/
 		onSubmit: (values: any) => {
 			console.log(values);
 			onFormSubmit(values);
 		}
 	});
-
+	/**
+	 * Type de la form.
+	 */
 	type postData = {
 		modelo: string;
 		rut: string;
@@ -96,7 +105,7 @@
 		año: string;
 	};
 	// Props
-	/** Exposes parent props to this component. */
+	/** Sirve para traer el componente padre a este componente hijo. */
 	export let parent: SvelteComponent;
 
 	const modalStore = getModalStore();
@@ -107,8 +116,7 @@
 		}
 	});
 
-	// We've created a custom submit function to pass the response and close the modal.
-	//Para validacion esta funcion va dentro del onSubmit.
+	// Esta funcion es la que se encarga de hacer el post y enviar la respuesta del modal al padre.
 	async function onFormSubmit(values: postData) {
 		//console.log(validateRut(formData.rut));
 		if ($modalStore[0].response) {

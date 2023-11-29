@@ -16,17 +16,27 @@
 	import modalForm from './modalForm.svelte';
 	import axios from 'axios';
 
+	/**
+	 * Se encarga de realizar la autenticacion.
+	*/
 	onMount(async () => {
 		await auth.createClient();
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
 	});
-
+	/**
+	 * Inicializa los componentes de Skeleton, en este caso el Modal.
+	*/
 	initializeStores();
-
+	/**
+	 * Data que se obtiene desde la api
+	*/
 	export let data: PageData;
 
+	/**
+	 * Se crea el componente del modal
+	 */
 	const modalStore = getModalStore();
 
 	const modalRegistry: Record<string, ModalComponent> = {
@@ -36,22 +46,36 @@
 	// modalStore.trigger(modal);
 	if ($modalStore[0]) console.log($modalStore[0].title);
 
+	/**
+	 * Realiza el logout del usuario.
+	 */
 	async function logout() {
 		await auth.logout();
 	}
+	/**
+	 * Propiedades de la paginacion de Skeleton.
+	 */
 	let paginationSettings = {
 		page: 0,
 		limit: 5,
 		size: data.allCars.length,
 		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
-
+	/**
+	 * Se encarga de separar la data para la paginacion.
+	 */
 	$: paginatedSource = data.allCars!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	/**
+	 * Variable para iniciar el modal seguido de una funcion que se encarga de montar el modal.
+	 */
 	let modalFlag: boolean = false;
 	function triggerModal() {
+		/**
+		 * Esta forma de implementar el modal es para cuando se esta esperando una respuesta de un componente.
+		*/
 		new Promise<boolean>((resolve) => {
 			const modal: ModalSettings = {
 				title: 'Ingresar registro.',
@@ -71,6 +95,9 @@
 			modalFlag = true;
 		}).then(async (r: any) => {
 			//PReguntar por error => triggerear modal.
+			/**
+			 * Si la respuesta es falsa, indica que algo salio mal.
+			*/
 			if (r.response == false) {
 				const modal: ModalSettings = {
 					type: 'alert',
@@ -80,6 +107,9 @@
 					buttonTextCancel: 'Aceptar'
 				};
 				modalStore.trigger(modal);
+			/**
+			 * Si la respuesta es verdadera, el post se realizo con exito por lo que actualizamos la data.
+			*/
 			} else if (r.response == true) {
 				console.log('Updating...');
 				data.allCars = await axios.get('http://127.0.0.1:8000/autos').then((res) => res.data);
