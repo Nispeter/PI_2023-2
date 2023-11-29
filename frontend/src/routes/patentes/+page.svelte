@@ -4,36 +4,99 @@
 	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
 	import type { PaginationSettings, TableSource } from '@skeletonlabs/skeleton';
 	import { Paginator, AppBar } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
+	import { onMount, type ComponentEvents } from 'svelte';
 	import { isAuthenticated } from '../../store';
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
 	import backArrow from '$lib/images/back-arrow.svg';
 	import logoutIcon from '$lib/images/logout.svg';
-
-	export let data: PageData;
+	import plusIcon from '$lib/images/plus.svg';
+	import { Modal, getModalStore, initializeStores } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
+	import modalForm from './modalForm.svelte';
+	import axios from 'axios';
 
 	onMount(async () => {
+		await auth.createClient();
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
 	});
 
+	initializeStores();
+
+	export let data: PageData;
+
+	const modalStore = getModalStore();
+
+	const modalRegistry: Record<string, ModalComponent> = {
+		modalComponent: { ref: modalForm }
+	};
+
+	// modalStore.trigger(modal);
+	if ($modalStore[0]) console.log($modalStore[0].title);
+
 	async function logout() {
 		await auth.logout();
 	}
-
 	let paginationSettings = {
 		page: 0,
 		limit: 5,
-		size: data.allpokemon.results.length,
+		size: data.allCars.length,
 		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
 
-	$: paginatedSource = data.allpokemon.results.slice(
+	$: paginatedSource = data.allCars!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	let modalFlag: boolean = false;
+	function triggerModal() {
+		new Promise<boolean>((resolve) => {
+			const modal: ModalSettings = {
+				title: 'Ingresar registro.',
+				body: 'Rellene el formulario.',
+				type: 'component',
+				component: 'modalComponent',
+				response: (r: boolean) => {
+					/**
+					puedes definir aqui el post pero esta debe ser una funcion asyncrona  
+					de definir el post dentro de modalForm entonces debes seguir esto
+					https://www.skeleton.dev/utilities/modals#async-response
+					**/
+					resolve(r);
+				}
+			};
+			modalStore.trigger(modal);
+			modalFlag = true;
+		}).then(async (r: any) => {
+			//PReguntar por error => triggerear modal.
+			if (r.response == false) {
+				const modal: ModalSettings = {
+					type: 'alert',
+					// Data
+					title: 'Error al registrar.',
+					body: 'Algo ha salido mal. Verifique los campos, si este error persiste contactar con soporte.',
+					buttonTextCancel: 'Aceptar'
+				};
+				modalStore.trigger(modal);
+			} else if (r.response == true) {
+				console.log('Updating...');
+				data.allCars = await axios.get('http://127.0.0.1:8000/autos').then((res) => res.data);
+				console.log('Updated');
+				const modal: ModalSettings = {
+					type: 'alert',
+					// Data
+					title: 'Registro exitoso.',
+					body: 'Se ha logrado registrar el vehículo con éxito.',
+					buttonTextCancel: 'Aceptar'
+				};
+				modalStore.trigger(modal);
+			}
+			//Trigger modal de exito.
+			console.log('resolved response', r);
+		});
+	}
 
 	// const tableSimple : TableSource = {
 	// 	head: ['ID', 'Name'],
@@ -43,11 +106,6 @@
 	let is_selected = false;
 
 	let table_item1: HTMLElement | null = null;
-
-	$: {
-		if (table_item1 != null) {
-		}
-	}
 </script>
 
 <!-- <Table source={tableSimple} interactive={true} /> -->
@@ -68,7 +126,9 @@
 	</svelte:fragment>
 
 	<svelte:fragment slot="trail">
-		<button type="button" class="btn-icon variant-filled-primary" on:click={logout}>
+		<button type="button" class="btn variant-filled-primary" on:click={logout}>
+			<span class="text-white">Cerrar Sesion</span>
+
 			<picture>
 				<img src={logoutIcon} alt="salir" width="20" height="20" />
 			</picture>
@@ -78,7 +138,10 @@
 <section>
 	<div class="p-20">
 		<Table
-			source={{ head: ['URL', 'NAME'], body: tableMapperValues(paginatedSource, ['url', 'name']) }}
+			source={{
+				head: ['PATENTE', 'MODELO', 'AÑO', 'RUT'],
+				body: tableMapperValues(paginatedSource, ['patente', 'modelo', 'ano', 'rut'])
+			}}
 			interactive={true}
 		/>
 		<!-- <Paginator bind:settings={paginationSettings} showFirstLastButtons={true} showPreviousNextButtons={true}/> -->
@@ -89,4 +152,18 @@
 			class="mt-10"
 		/>
 	</div>
+	<div class="flex justify-end px-20">
+		<button
+			type="button"
+			on:click={triggerModal}
+			class="btn variant-filled-primary justify-self-end"
+		>
+			<picture>
+				<img src={plusIcon} alt="salir" width="20" height="20" />
+			</picture>
+			<span>Agregar Residente</span>
+		</button>
+	</div>
 </section>
+
+<Modal components={modalRegistry} />

@@ -1,12 +1,11 @@
-import type { PageLoad } from './$types';
-import type { ManyPokemon } from './types';
+import type { Car } from './types';
 import axios from 'axios';
 
 export const load = (async () => {
-	const allpokemon: ManyPokemon = await axios('https://pokeapi.co/api/v2/pokemon').then(
+	const allCars: Car[] = await axios('http://127.0.0.1:8000/autos').then(
 		(res) => res.data
-	);
+	)
 	return {
-		allpokemon
+		allCars
 	};
-}) satisfies PageLoad;
+});

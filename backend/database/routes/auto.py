@@ -33,32 +33,10 @@ async def find_auto(patente: str):#pedimos la patente
 #endpoint para ingresar un auto a la base de datos
 @auto.post('/autos')
 async def create_auto(auto: Auto):#pedimos el objeto auto
-    rut_propietario = auto.rut#extraemos de este el rut de su propietario
-    persona_data = con.test.persona.find_one({"rut": rut_propietario})#hacemos una query que busca una persona dado un rut y guardamos el resultado en persona_data
-
-    if not persona_data:#si no existe entonces el propietario del auto que se quiere asignar, no existe por lo que se manda una alerta
-        raise HTTPException(status_code=404, detail="Propietario no encontrado")
-
-    # Luego se crea un objeto Persona directamente con los datos necesarios
-    propietario = Persona(
-        id=str(persona_data["_id"]),  # Convertimos el ObjectId a una cadena
-        rut=persona_data["rut"],
-        nombre=persona_data["nombre"],
-        rol=persona_data["rol"]
-    )
-
-    # Convertimos el objeto propietario a un diccionario usando el método dict() de Pydantic
-    propietario_dict = propietario.dict()
+    #pasamos el auto a dict()
+    new_auto = dict(auto)
     
-    #generamos el objeto auto con los campos necesarios
-    new_auto = {
-        "patente": auto.patente,
-        "modelo": auto.modelo,
-        "año": auto.año,
-        "propietario": propietario_dict
-    }
-    
-    #insertamos en la coleccion el auto generado 
+    #Creamos el auto con la informacion dada
     auto_id = con.test.auto.insert_one(new_auto).inserted_id
 
     #retornamos el id a modo de confirmacion

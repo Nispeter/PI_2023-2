@@ -15,7 +15,7 @@ class Auto(BaseModel):
     modelo: str
 
     # Campo para el año del auto
-    año: int
+    ano: int
 
     # Campo para el rut del propietario del auto, esto sera para buscar el resto de informacion del propietario en el post
     rut: str

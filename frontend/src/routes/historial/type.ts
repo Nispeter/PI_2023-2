@@ -1,7 +1,3 @@
-export type Lugar = {
-    cam_id: string
-}
-
 export type Propietario = {
     id: string,
     rut: string,
@@ -13,7 +9,7 @@ export interface DataH{
     id: string,
     car_id: number,
     time: string,
-    lugar: Lugar
+    lugar:string, 
     licence: string,
     probability: number
 }
