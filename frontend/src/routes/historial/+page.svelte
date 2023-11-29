@@ -13,41 +13,49 @@
 	import type { DataH } from './type';
 	import AxiosSugar from 'axios-sugar';
 
+	// Se define hi como un datatype DataH o como null
 	let hi: DataH[] | null = [];
 
 	onMount(async () => {
+		// Login
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
 
+		// Request cada 10 segundos
 		let myInterval = setInterval(async () => {
 			try {
+				// Request al Endpoint
 				const result = await AxiosSugar.get(
 					'http://localhost:8000/horarios',
 					{},
 					{
+						// intervalo de tiempo para hacer las requests
 						repeat: {
 							interval: 1000
 						}
 					}
 				);
-				//console.log(result);
+				// Se guarda los datos en hi
 				hi = result.data;
+				// Para casos no nulos se parsea la fecha a un dato mas amigable
 				hi?.forEach((values) => {
 					const date = new Date(values.time);
 					values.time = date.toLocaleString();
 				});
-				//console.log(hi); para verificar el intervalo
+			// Se recoge el error en caso de haberlo y se envia un mensaje
 			} catch (error) {
 				console.error(error);
 			}
 		}, 5000);
 	});
 
+	// Funcion de log out
 	async function logout() {
 		await auth.logout();
 	}
 
+	// Parametros para la paginacion
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
@@ -55,11 +63,13 @@
 		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
 
+	// Aqui se hace un slice de los datos para poder hacer una paginacion de tabla
 	$: paginatedSource = hi!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
+	// Funcion para hacer que al precionar un boton vaya a la pagina de patentes
 	const goPatentes = () => {
 		goto('/patentes');
 	};
@@ -74,6 +84,7 @@
 	<h3 class="h3" data-toc-ignore>Bienvenidos a su aplicacion de reconocimiento de vehiculos</h3>
 
 	<svelte:fragment slot="trail">
+		<!-- Boton para hacer log out -->
 		<button type="button" class="btn variant-filled-primary" on:click={logout}>
 			<span class="text-white">Cerrar Sesion</span>
 			<picture>
@@ -86,6 +97,7 @@
 <div class="w-full p-10">
 	<div class="flex justify-end">
 		<div>
+			<!-- Boton para ir a la pagina de administracion -->
 			<button type="button" class="btn variant-filled" on:click={goPatentes}
 				>Administrar Residente</button
 			>
@@ -93,6 +105,7 @@
 	</div>
 </div>
 <div class="px-20 py-5">
+	<!-- Tabla con paginacion -->
 	<Table
 		source={{
 			head: ['Número Patente', 'Fecha', 'Camara'],
