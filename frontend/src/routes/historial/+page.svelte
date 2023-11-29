@@ -24,15 +24,16 @@
 		// Funcion de Axios que en intervalos de 5 segundos hace la request de get para los datos del URL 
 		let myInterval = setInterval(async () => {
 			try {
+<<<<<<< HEAD
+				// Get mediante axiosSugar para manejar las request repetitivas
+				const result = await AxiosSugar.get('http://localhost:8000/horarios');
+=======
 				const result = await AxiosSugar.get(
 					'http://localhost:8000/horarios',
 					{},
 					{
 						repeat: {
 							interval: 1000
-						}
-					}
-				);
 				//console.log(result);
 				hi = result.data;
 				hi?.forEach((values) => {
@@ -42,7 +43,6 @@
 				//console.log(hi); para verificar el intervalo
 			} catch (error) {
 				console.error(error);
-			}
 		}, 5000);
 	});
 
@@ -50,6 +50,22 @@
 		await auth.logout();
 	}
 
+<<<<<<< HEAD
+	/* async function doGetRequest() {
+
+		const params = hi;
+
+		const d: Dueño[] = await axios.get(`http://localhost:8000/autos/patentes?${params}`).then(
+			(res) => res.data
+		)
+		return {
+			d
+		};
+	} */
+
+	// Configuracion de la paginacion
+=======
+>>>>>>> dev
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
