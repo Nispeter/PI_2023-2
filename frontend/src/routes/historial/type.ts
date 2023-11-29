@@ -1,10 +1,4 @@
-export type Propietario = {
-    id: string,
-    rut: string,
-    nombre: string,
-    rol: string
-}
-
+// Datatype, que recibe los datos del Endpoint horario que contiene los siguientes datos
 export interface DataH{
     id: string,
     car_id: number,
@@ -12,12 +6,4 @@ export interface DataH{
     lugar:string, 
     licence: string,
     probability: number
-}
-
-export interface Dueño{
-    id: string,
-    patente: string,
-    modelo: string,
-    año: string,
-    propietario: Propietario
 }

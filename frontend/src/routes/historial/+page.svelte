@@ -105,7 +105,7 @@
 	</div>
 </div>
 <div class="px-20 py-5">
-	<!-- Tabla con paginacion -->
+	<!-- Tabla con los datos obtenidos de la request, separados por la patente, la fecha y hora de la deteccion y la camara que lo detecto -->
 	<Table
 		source={{
 			head: ['Número Patente', 'Fecha', 'Camara'],
@@ -113,6 +113,7 @@
 		}}
 		interactive={true}
 	/>
+	<!-- Paginacion para la tabla -->
 	<Paginator
 		bind:settings={paginationSettings}
 		showFirstLastButtons={true}
