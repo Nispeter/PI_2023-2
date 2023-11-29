@@ -17,21 +17,25 @@
 	import axios from 'axios';
 	import AxiosSugar from 'axios-sugar';
 
+	// Se define el tipo de dato para hi
 	let hi: DataH[] | null = [];
 
+	// Se llama el intervalo de soporte para las requests
 	AxiosSugar.defaults = {
 		repeat: {
 			interval: 5000 //5s
 		}
-	};
+	}
 
 	onMount(async () => {
+		// Autentificacion por login
 		if (!get(isAuthenticated)) {
 			goto('/login');
 		}
-
+		// Funcion de Axios que en intervalos de 5 segundos hace la request de get para los datos del URL 
 		let myInterval = setInterval(async () => {
 			try {
+				// Get mediante axiosSugar para manejar las request repetitivas
 				const result = await AxiosSugar.get('http://localhost:8000/horarios');
 				//console.log(result);
 				hi = result.data;
@@ -59,6 +63,7 @@
 		};
 	} */
 
+	// Configuracion de la paginacion
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
@@ -66,15 +71,18 @@
 		amounts: [1, 2, 5, 10]
 	} satisfies PaginationSettings;
 
+	// Se obtiene el Source de la paginacion mediante el slice de hi, que contiene los datos del request
 	$: paginatedSource = hi!.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
+	// Funcion para el boton
 	const goPatentes = () => {
 		goto('/patentes');
 	};
 </script>
+
 
 <svelte:head>
 	<title>Historial</title>
@@ -96,6 +104,7 @@
 <div class="w-full p-10">
 	<div class="flex justify-end">
 		<div>
+			<!-- Boton que llega al servicio de administracion de datos -->
 			<button type="button" class="btn variant-filled" on:click={goPatentes}
 				>Administrar Base de Datos</button
 			>
@@ -103,6 +112,7 @@
 	</div>
 </div>
 <div class="px-20 py-5">
+	<!-- Tabla que obtiene sus datos de pagginatesSource-->
 	<Table
 		source={{
 			head: ['Número Patente', 'Fecha'],
@@ -110,6 +120,7 @@
 		}}
 		interactive={true}
 	/>
+	<!-- Paginador que permite que la tabla tenga distintas paginas para mejor visualizacion de los datos -->
 	<Paginator
 		bind:settings={paginationSettings}
 		showFirstLastButtons={true}
