@@ -17,6 +17,8 @@ git clone git@github.com:Nispeter/PI_2023-2.git
 ```
 ## Frontend
 
+Los siguiente pasos deben ser ejecutados estando en la siguiente ruta `<root Repo>/frontend`
+
 ### Requisitos Previos
 
 - Node.js: Debes tener Node.js instalado en tu sistema. Puedes descargarlo desde la página [oficial de Node.js](https://nodejs.org/).
@@ -131,25 +133,25 @@ python client.py
 
 Desde backend/database/
 
-- Crear ambiente\
+- Crear ambiente
 
 ```bash
 python -m venv venv
 ```
 
-- Activar el ambiente\
+- Activar el ambiente
 
 ```bash
 ./env/Scripts/activate
 ```
 
-- Alternativamente\
+- Alternativamente
 
 ```bash
 source ./venv/bin/activate
 ```
 
-- Instalar las dependencias en el ambiente\
+- Instalar las dependencias en el ambiente
 
 ```bash
 pip install -r requirements.txt
