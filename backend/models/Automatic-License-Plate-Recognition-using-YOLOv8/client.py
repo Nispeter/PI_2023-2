@@ -6,7 +6,7 @@ import cv2
 # Simulacion de camara como cliente, que envia fotografias en vivo 
 url = "http://127.0.0.1:5000/detect_license_plate"
 
-video_filename = "./images/gringo/sample.mp4"
+video_filename = "./sample.mp4"
 video = cv2.VideoCapture(video_filename)
 
 if not video.isOpened():
