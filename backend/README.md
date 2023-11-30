@@ -1,6 +1,8 @@
 # Modelo
 ## Instalacion 
 desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
+- En el script network_utils.py modificar la funcion sendTelegram() para que contega el token de telegram al cual se le quiere enviar la notificacion, especificamente agregar y des-comentar la siguiente linea: \
+```bot = telegram.Bot("")```
 - Crear un ambiente con python=3.8:\
 ```conda create --prefix ./env python==3.8 -y```
 - Instalar las dependencias en el ambiente: \
