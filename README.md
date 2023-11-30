@@ -44,14 +44,12 @@ pnpm es el administrador de paquetes utilizado para el frontend. Sigue estas ins
 
 ### Configuración de Archivo .env
 
-1. En la carpeta del frontend, crea un archivo .env basándote en .env.example.
 1. Copia el contenido de .env.example en .env.
 1. Modifica los valores en .env según sea necesario.
 
 ### Ejecución del Proyecto
 
-1. Navega a la carpeta del frontend.
-1. Instala las dependencias con pnpm install.
+1. Instala las dependencias con `pnpm install`.
 1. Inicia el proyecto con `pnpm dev`.
 1. Accede a la aplicación en http://localhost:5173.
 
