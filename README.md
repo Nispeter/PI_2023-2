@@ -88,13 +88,13 @@ Obtendido de https://github.com/computervisioneng/automatic-number-plate-recogni
 #### 4. Poner el token y el chat_id en sus respectivas variables en lineas XX y XX. 
 Desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
 - En el script network_utils.py modificar la funcion sendTelegram() para que se utilice el bot con el chat deseado
-### video
+### Video
 Debe tenerse el video sample.mp4 que será utilizado como si fuese una cámara dentro de la carpeta: 
 backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
 El video utilizado para testear es:
 https://drive.google.com/file/d/1JbwLyqpFCXmftaJY1oap8Sa6KfjoWJta/view?usp=sharing 
 
-### ejecucion
+### ejecución
 
 Dentro del ambiente desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
 - Correr el Servidor:\
