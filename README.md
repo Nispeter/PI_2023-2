@@ -38,7 +38,7 @@ pnpm es el administrador de paquetes utilizado para el frontend. Sigue estas ins
 #### macOS
 
 1. Abre la terminal.
-1. Ejecuta: curl -fsSL https://get.pnpm.io/v6.16.js | node - add --global pnpm.
+1. Ejecuta: `curl -fsSL https://get.pnpm.io/v6.16.js | node - add --global pnpm`.
 
 ### Configuración de Archivo .env
 
