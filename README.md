@@ -2,7 +2,21 @@
 
 Aplicación de alerta de autos sospechosos reconocido por medio de camaras de vigilancia y inteligencia artificial
 
+## Clonación del Repositorio
+
+### Usando HTTP
+
+```bash
+git clone https://github.com/Nispeter/PI_2023-2.git
+```
+
+### Usando SSH
+
+```bash
+git clone git@github.com:Nispeter/PI_2023-2.git
+```
 ## Frontend
+
 ### Requisitos Previos
 
 - Node.js: Debes tener Node.js instalado en tu sistema. Puedes descargarlo desde la página [oficial de Node.js](https://nodejs.org/).
@@ -10,6 +24,7 @@ Aplicación de alerta de autos sospechosos reconocido por medio de camaras de vi
 ### Instalación de pnpm
 
 pnpm es el administrador de paquetes utilizado para el frontend. Sigue estas instrucciones para instalarlo:
+
 #### Windows
 
 1. Abre PowerShell como administrador.
@@ -24,21 +39,6 @@ pnpm es el administrador de paquetes utilizado para el frontend. Sigue estas ins
 
 1. Abre la terminal.
 1. Ejecuta: curl -fsSL https://get.pnpm.io/v6.16.js | node - add --global pnpm.
-
-
-### Clonación del Repositorio
-
-#### Usando HTTP
-
-```bash
-git clone https://github.com/Nispeter/PI_2023-2.git
-```
-
-#### Usando SSH
-
-```bash
-git clone git@github.com:Nispeter/PI_2023-2.git
-```
 
 ### Configuración de Archivo .env
 
