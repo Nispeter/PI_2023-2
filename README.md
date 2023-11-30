@@ -59,25 +59,36 @@ pnpm es el administrador de paquetes utilizado para el frontend. Sigue estas ins
 Obtendido de https://github.com/computervisioneng/automatic-number-plate-recognition-python-yolov8
 
 ### Ambiente 
-- Crear un ambiente con python=3.8:\
-```conda create --prefix ./env python==3.8 -y```
-- Instalar las dependencias en el ambiente: \
-```pip install -r requirements.txt```
+
+- Crear un ambiente con python=3.8:
+
+```bash
+conda create --prefix ./env python==3.8 -y
+```
+- Instalar las dependencias en el ambiente: 
+
+```bash
+pip install -r requirements.txt
+```
 
 ### Uso chat bot
-### Crear un Bot en Telegram y Obtener el `chat_id`
 
-#### 1. Crear el Bot en Telegram
+#### Crear un Bot en Telegram y Obtener el `chat_id`
+
+##### Crear el Bot en Telegram
+
 - Abre **Telegram** y busca el bot oficial llamado `BotFather`.
 - Inicia una conversación con `BotFather` y utiliza el comando `/newbot`.
 - Sigue las instrucciones para nombrar tu bot y asignarle un nombre de usuario. Debe terminar en `bot` (e.g., `mi_primer_bot`).
 - `BotFather` te proporcionará un **token de acceso**. Guárdalo, es necesario para interactuar con la API de Telegram.
 
-#### 2. Enviar un Mensaje al Bot
+##### Enviar un Mensaje al Bot
+
 - Busca tu bot en Telegram usando el nombre de usuario creado.
 - Inicia una conversación enviando cualquier mensaje.
 
-#### 3. Obtener el `chat_id`
+##### Obtener el `chat_id`
+
 - Realiza una solicitud **HTTP GET** a la siguiente URL: `https://api.telegram.org/bot[TU_TOKEN]/getUpdates`
 - Reemplaza `[TU_TOKEN]` con el token proporcionado por `BotFather`.
 - La solicitud puede hacerse desde un navegador o herramientas como Postman.
@@ -85,35 +96,73 @@ Obtendido de https://github.com/computervisioneng/automatic-number-plate-recogni
 
 **Nota:** El `chat_id` es único para cada conversación. 
 
-#### 4. Poner el token y el chat_id en sus respectivas variables en lineas XX y XX. 
-Desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
+##### Poner el token y el chat_id en sus respectivas variables en lineas XX y XX. 
+
+Desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8
+
 - En el script network_utils.py modificar la funcion sendTelegram() para que se utilice el bot con el chat deseado
-### video
+
+### Video
+
 Debe tenerse el video sample.mp4 que será utilizado como si fuese una cámara dentro de la carpeta: 
+
 backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
+
 El video utilizado para testear es:
+
 https://drive.google.com/file/d/1JbwLyqpFCXmftaJY1oap8Sa6KfjoWJta/view?usp=sharing 
 
-### ejecucion
+### Ejecución
 
 Dentro del ambiente desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
-- Correr el Servidor:\
-```python main.py```
-- Correr el Cliente:\
-```python client.py```
+- Correr el Servidor:
+
+```bash
+python main.py
+```
+- Correr el Cliente:
+
+```bash
+python client.py
+```
 ## Base de datos
-### Instalacion
+
+### Instalación
+
 Desde backend/database/
+
 - Crear ambiente\
-```python -m venv venv```
+
+```bash
+python -m venv venv
+```
+
 - Activar el ambiente\
-```./env/Scripts/activate```
+
+```bash
+./env/Scripts/activate
+```
+
 - Alternativamente\
-```source ./venv/bin/activate```
+
+```bash
+source ./venv/bin/activate
+```
+
 - Instalar las dependencias en el ambiente\
-```pip install -r requirements.txt```
+
+```bash
+pip install -r requirements.txt
+```
+
 ### Uso
-Desde backend/database/
-```uvicorn app:app```
-Inferfaz de fast api para probar endpoints:\
-127.0.0.1:8000/docs/\
+
+Desde backend/database
+
+```bash
+uvicorn app:app
+```
+
+Inferfaz de fast api para probar endpoints:
+
+127.0.0.1:8000/docs/
