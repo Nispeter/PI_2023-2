@@ -94,7 +94,7 @@ backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
 El video utilizado para testear es:
 https://drive.google.com/file/d/1JbwLyqpFCXmftaJY1oap8Sa6KfjoWJta/view?usp=sharing 
 
-### ejecución
+### Ejecución
 
 Dentro del ambiente desde backend/models/Automatic-License-Plate-Recognition-using-YOLOv8/
 - Correr el Servidor:\
