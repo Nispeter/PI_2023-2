@@ -208,7 +208,7 @@
 		<!-- prettier-ignore -->
 		<footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={handleSubmit}>Submit Form</button>
+        <button class="btn {parent.buttonPositive}" on:click={handleSubmit}>Ingresar Nuevo Recidente</button>
         <!-- <button class="btn {parent.buttonPositive}" type="submit">Submit Form</button> -->
     </footer>
 	</div>
