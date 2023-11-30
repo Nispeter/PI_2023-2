@@ -56,7 +56,8 @@ pnpm es el administrador de paquetes utilizado para el frontend. Sigue estas ins
 ## Backend
 
 ### Modelo
-obtendido de https://github.com/computervisioneng/automatic-number-plate-recognition-python-yolov8
+Obtendido de https://github.com/computervisioneng/automatic-number-plate-recognition-python-yolov8
+
 ### Ambiente 
 - Crear un ambiente con python=3.8:\
 ```conda create --prefix ./env python==3.8 -y```
@@ -100,9 +101,9 @@ Dentro del ambiente desde backend/models/Automatic-License-Plate-Recognition-usi
 ```python main.py```
 - Correr el Cliente:\
 ```python client.py```
-# Base de datos
-## Instalacion
-desde backend/database/
+## Base de datos
+### Instalacion
+Desde backend/database/
 - Crear ambiente\
 ```python -m venv venv```
 - Activar el ambiente\
@@ -111,8 +112,8 @@ desde backend/database/
 ```source ./venv/bin/activate```
 - Instalar las dependencias en el ambiente\
 ```pip install -r requirements.txt```
-## Uso
-desde backend/database/
+### Uso
+Desde backend/database/
 ```uvicorn app:app```
-inferfaz de fast api para probar endpoints:\
+Inferfaz de fast api para probar endpoints:\
 127.0.0.1:8000/docs/\
